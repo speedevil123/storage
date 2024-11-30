@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Models
 {
-    internal class OperationHistory
+    public class OperationHistory
     {
         public OperationHistory(Guid id, string operationType, Guid toolId, Guid workerId,
             DateTime date, string comment, Tool tool, Worker worker) 
