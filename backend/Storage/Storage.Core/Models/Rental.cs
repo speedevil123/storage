@@ -8,10 +8,9 @@ namespace Storage.Core.Models
 {
     public class Rental
     {
-        public Rental(Guid id, Guid workerId, Guid toolId, 
+        public Rental(Guid workerId, Guid toolId, 
             DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
         {
-            Id = id;
             WorkerId = workerId;
             ToolId = toolId;
             StartDate = startDate;
@@ -21,7 +20,6 @@ namespace Storage.Core.Models
             Worker = worker;
             Tool = tool;
         }
-        public Guid Id { get;}
         public DateTime StartDate { get; } = new DateTime();
         public DateTime? ReturnDate { get; } = new DateTime();
         public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)

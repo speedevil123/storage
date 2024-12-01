@@ -9,7 +9,6 @@ namespace Storage.Infrastructure.Entities
 {
     public class RentalEntity
     {
-        public Guid Id { get; set; }
         public DateTime StartDate { get; set; } = new DateTime();
         public DateTime? ReturnDate { get; set; } = new DateTime();
         public string Status { get; set; } = string.Empty; // Статус (активен, завершен, просрочен)
@@ -18,7 +17,7 @@ namespace Storage.Infrastructure.Entities
         public Guid WorkerId { get; set; }
         public Guid ToolId { get; set; }
 
-        public Worker Worker { get; set; }
-        public Tool Tool { get; set; }
+        public virtual WorkerEntity Worker { get; set; }
+        public virtual ToolEntity Tool { get; set; }
     }
 }

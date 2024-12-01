@@ -10,27 +10,43 @@ using System.Threading.Tasks;
 
 namespace Storage.DataAccess.Configurations
 {
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class ToolConfiguration : IEntityTypeConfiguration<ToolEntity>
     {
         public void Configure(EntityTypeBuilder<ToolEntity> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(t => t.Id);
 
-            builder.Property(b => b.Type)
-                .HasMaxLength(Tool.MAX_STR_LENGTH)
-                .IsRequired();
+            builder.Property(t => t.Type)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            builder.Property(b => b.Model)
-                .IsRequired();
+            builder.Property(t => t.Model)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            builder.Property(b => b.Manufacturer)
-                .IsRequired();
+            builder.Property(t => t.Manufacturer)
+                .IsRequired()
+                .HasMaxLength(100);
 
-            builder.Property(b => b.Quantity)
-                .IsRequired();
+            builder.Property(t => t.Quantity)
+                .IsRequired()
+                .HasDefaultValue(0);
 
-            builder.Property(b => b.IsTaken)
-                .IsRequired();
+            builder.Property(t => t.IsTaken)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.HasMany(t => t.Rentals)
+                .WithOne(r => r.Tool)
+                .HasForeignKey(r => r.ToolId);
+
+            builder.HasMany(t => t.OperationHistories)
+                .WithOne(o => o.Tool)
+                .HasForeignKey(o => o.ToolId);
         }
     }
+
 }

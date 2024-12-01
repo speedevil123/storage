@@ -14,46 +14,25 @@ namespace Storage.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<RentalEntity> builder)
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(r => new { r.WorkerId, r.ToolId }); // Composite key if needed
 
+            builder.Property(r => r.StartDate)
+                .IsRequired();
+
+            builder.Property(r => r.ReturnDate)
+                .IsRequired(false); // Nullable
+
+            builder.Property(r => r.Status)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            builder.HasOne(r => r.Worker)
+                .WithMany(w => w.Rentals)
+                .HasForeignKey(r => r.WorkerId);
+
+            builder.HasOne(r => r.Tool)
+                .WithMany(t => t.Rentals)
+                .HasForeignKey(r => r.ToolId);
         }
     }
-     
-    //public Guid Id { get; }
-    //public DateTime StartDate { get; } = new DateTime();
-    //public DateTime? ReturnDate { get; } = new DateTime();
-    //public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)
-
-    ////Navigation Properties-ForeignKeys
-    //public Guid WorkerId { get; }
-    //public Guid ToolId { get; }
-
-    //public Worker Worker { get; }
-    //public Tool Tool { get; }
-    
-    //////////////////////
-
-    //public class ToolConfiguration : IEntityTypeConfiguration<ToolEntity>
-    //{
-    //    public void Configure(EntityTypeBuilder<ToolEntity> builder)
-    //    {
-    //        builder.HasKey(x => x.Id);
-
-    //        builder.Property(b => b.Type)
-    //            .HasMaxLength(Tool.MAX_STR_LENGTH)
-    //            .IsRequired();
-
-    //        builder.Property(b => b.Model)
-    //            .IsRequired();
-
-    //        builder.Property(b => b.Manufacturer)
-    //            .IsRequired();
-
-    //        builder.Property(b => b.Quantity)
-    //            .IsRequired();
-
-    //        builder.Property(b => b.IsTaken)
-    //            .IsRequired();
-    //    }
-    //}
 }

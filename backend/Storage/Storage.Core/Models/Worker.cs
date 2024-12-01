@@ -26,5 +26,7 @@ namespace Storage.Core.Models
         public string Email { get; } = string.Empty;
         public string Phone { get; } = string.Empty;
         public DateTime RegistrationDate { get; } = new DateTime();
+        public List<Tool> Tools { get; } = new List<Tool>();
+        public List<Rental> Rentals { get; } = new List<Rental>();
     }
 }

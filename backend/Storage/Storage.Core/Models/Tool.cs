@@ -19,11 +19,13 @@ namespace Storage.Core.Models
             IsTaken = isTaken;
         }
 
-        public Guid Id { get;}
-        public string Type { get;} = string.Empty;
-        public string Model { get;} = string.Empty;
-        public string Manufacturer { get;} = string.Empty;
-        public int Quantity { get;} = 0;
+        public Guid Id { get; }
+        public string Type { get; } = string.Empty;
+        public string Model { get; } = string.Empty;
+        public string Manufacturer { get; } = string.Empty;
+        public int Quantity { get; } = 0;
         public bool IsTaken { get; } = false;
+        public List<Worker> Workers { get; } = new List<Worker>();
+        public List<Rental> Rentals { get; } = new List<Rental>();
     }
 }
