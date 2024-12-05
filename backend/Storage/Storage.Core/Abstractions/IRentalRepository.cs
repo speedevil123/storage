@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Abstractions
 {
-    internal interface IRentalRepository
+    public interface IRentalRepository
     {
         Task<Guid> Create(Rental rental);
         Task<Guid> Delete(Guid workerId, Guid toolId);

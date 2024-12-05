@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Abstractions
 {
-    internal interface IOperationHistoryService
+    public interface IOperationHistoryService
     {
         Task<Guid> CreateOperationHistory(OperationHistory operationHistory);
         Task<Guid> DeleteOperationHistory(Guid id);

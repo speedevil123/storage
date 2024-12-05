@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Abstractions
 {
-    internal interface IWorkerService
+    public interface IWorkerService
     {
         Task<Guid> CreateWorker(Worker worker);
         Task<Guid> DeleteWorker(Guid id);
