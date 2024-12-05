@@ -17,6 +17,7 @@ namespace Storage.Core.Models
             WorkerId = workerId;
             Date = date;
             Comment = comment;
+
             Tool = tool;
             Worker = worker;
         }
