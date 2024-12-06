@@ -10,7 +10,7 @@ namespace Storage.Infrastructure.Entities
     public class RentalEntity
     {
         public DateTime StartDate { get; set; } = new DateTime();
-        public DateTime? ReturnDate { get; set; } = new DateTime();
+        public DateTime ReturnDate { get; set; } = new DateTime();
         public string Status { get; set; } = string.Empty; // Статус (активен, завершен)
 
         //Navigation Properties-ForeignKeys

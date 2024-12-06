@@ -9,6 +9,6 @@ namespace Storage.Infrastructure.Enum
     public class StatusCategories
     {
         public const string Active = "Активный";
-        public const string inActive = string.Empty;
+        public const string inActive = "";
     }
 }
