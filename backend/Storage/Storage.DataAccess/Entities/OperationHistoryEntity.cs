@@ -17,7 +17,7 @@ namespace Storage.Infrastructure.Entities
         //Navigation properties-Foregign Keys
         public Guid ToolId { get; set; }
         public Guid WorkerId { get; set; }
-        public virtual ToolEntity Tool { get; set; }
-        public virtual WorkerEntity Worker { get; set; }
+        public virtual Tool Tool { get; set; }
+        public virtual Worker Worker { get; set; }
     }
 }

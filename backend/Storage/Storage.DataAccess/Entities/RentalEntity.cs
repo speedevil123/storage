@@ -11,13 +11,13 @@ namespace Storage.Infrastructure.Entities
     {
         public DateTime StartDate { get; set; } = new DateTime();
         public DateTime? ReturnDate { get; set; } = new DateTime();
-        public string Status { get; set; } = string.Empty; // Статус (активен, завершен, просрочен)
+        public string Status { get; set; } = string.Empty; // Статус (активен, завершен)
 
         //Navigation Properties-ForeignKeys
         public Guid WorkerId { get; set; }
         public Guid ToolId { get; set; }
 
-        public virtual WorkerEntity Worker { get; set; }
-        public virtual ToolEntity Tool { get; set; }
+        public virtual Worker Worker { get; set; }
+        public virtual Tool Tool { get; set; }
     }
 }

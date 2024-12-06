@@ -17,19 +17,6 @@ namespace Storage.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<List<Tool>> Get()
-        {
-            var ToolEntities = await _context.Tools
-                .AsNoTracking()
-                .ToListAsync();
-
-            var tools = ToolEntities
-                .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken))
-                .ToList();
-
-            return tools;
-        }
-
         public async Task<Guid> Create(Tool tool)
         {
             var toolEntity = new ToolEntity
@@ -48,6 +35,28 @@ namespace Storage.DataAccess.Repositories
             return toolEntity.Id;
         }
 
+        public async Task<Guid> Delete(Guid id)
+        {
+            await _context.Tools
+                .Where(t => t.Id == id)
+                .ExecuteDeleteAsync();
+
+            return id;
+        }
+
+        public async Task<List<Tool>> Get()
+        {
+            var ToolEntities = await _context.Tools
+                .AsNoTracking()
+                .ToListAsync();
+
+            var tools = ToolEntities
+                .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken))
+                .ToList();
+
+            return tools;
+        }
+
         public async Task<Guid> Update(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
         {
             await _context.Tools
@@ -58,15 +67,6 @@ namespace Storage.DataAccess.Repositories
                     .SetProperty(t => t.Manufacturer, t => manufacturer)
                     .SetProperty(t => t.Quantity, t => quantity)
                     .SetProperty(t => t.IsTaken, t => isTaken));
-
-            return id;
-        }
-
-        public async Task<Guid> Delete(Guid id)
-        {
-            await _context.Tools
-                .Where(t => t.Id == id)
-                .ExecuteDeleteAsync();
 
             return id;
         }
