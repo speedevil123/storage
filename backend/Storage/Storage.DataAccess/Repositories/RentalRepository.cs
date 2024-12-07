@@ -88,17 +88,32 @@ namespace Storage.Infrastructure.Repositories
         public async Task<Guid> Update(Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
         {
-            var rentalEntity = await _context.Rentals
-                .FirstOrDefaultAsync(r => r.WorkerId == workerId && r.ToolId == toolId);
+            var workerEntity = await _context.Workers
+                .FirstOrDefaultAsync(r => r.Id == workerId);
 
-            if (rentalEntity != null)
+            //Подтягиваем рентал
+            var rentalEntity = workerEntity.Rentals.FirstOrDefault(r => r.ToolId == toolId);
+
+            if(rentalEntity != null)
             {
-                rentalEntity.StartDate = startDate;
-                rentalEntity.ReturnDate = returnDate;
-                rentalEntity.Status = status;
+                //Удаляем старое состояние
+                workerEntity.Rentals.Remove(rentalEntity);
 
+                //Обновляем
+                rentalEntity = new RentalEntity
+                {
+                    WorkerId = workerId,
+                    ToolId = toolId,
+                    StartDate = startDate,
+                    ReturnDate = returnDate,
+                    Status = status,
+                    Worker = worker,
+                    Tool = tool
+                };
+
+                //Добавляем новое состояние
+                workerEntity.Rentals.Add(rentalEntity);
                 await _context.SaveChangesAsync();
-                return rentalEntity.Id;
             }
 
             throw new KeyNotFoundException("The rental record was not found.");

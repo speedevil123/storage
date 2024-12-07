@@ -46,11 +46,11 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<List<Tool>> Get()
         {
-            var ToolEntities = await _context.Tools
+            var toolEntities = await _context.Tools
                 .AsNoTracking()
                 .ToListAsync();
 
-            var tools = ToolEntities
+            var tools = toolEntities
                 .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken))
                 .ToList();
 
