@@ -20,7 +20,7 @@ namespace Storage.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(r => r.ReturnDate)
-                .IsRequired(false); // Nullable
+                .IsRequired(); // Nullable
 
             builder.Property(r => r.Status)
                 .IsRequired()

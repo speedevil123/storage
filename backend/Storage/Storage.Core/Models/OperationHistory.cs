@@ -8,8 +8,9 @@ namespace Storage.Core.Models
 {
     public class OperationHistory
     {
+        public OperationHistory() { }
         public OperationHistory(Guid id, string operationType, Guid toolId, Guid workerId,
-            DateTime date, string comment, Tool tool, Worker worker) 
+            DateTime date, string comment) 
         {
             Id = id;
             OperationType = operationType;
@@ -17,9 +18,6 @@ namespace Storage.Core.Models
             WorkerId = workerId;
             Date = date;
             Comment = comment;
-
-            Tool = tool;
-            Worker = worker;
         }
         public Guid Id { get;}
         public string OperationType { get; } = string.Empty;
@@ -30,7 +28,7 @@ namespace Storage.Core.Models
         public Guid ToolId { get; }
         public Guid WorkerId { get; }
 
-        public virtual Tool Tool { get;}
-        public virtual Worker Worker { get;} 
+        public virtual Tool? Tool { get;}
+        public virtual Worker? Worker { get;} 
     }
 }

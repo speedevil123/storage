@@ -2,6 +2,7 @@
 using Storage.Core.Abstractions;
 using Storage.Core.Models;
 using Storage.DataAccess;
+using Storage.DataAccess.Repositories;
 using Storage.Infrastructure.Entities;
 using Storage.Infrastructure.Enum;
 using System;
@@ -29,25 +30,35 @@ namespace Storage.Infrastructure.Repositories
                 ToolId = rental.ToolId,
                 StartDate = rental.StartDate,
                 ReturnDate = rental.ReturnDate,
-                Status = rental.Status,
-                Tool = rental.Tool
+                Status = rental.Status
             };
 
-            rentalEntity.StartDate = DateTime.Now;
-            rentalEntity.Status = StatusCategories.Active;
+            var toolEntity = await _context.Tools
+                .FirstOrDefaultAsync(t => t.Id == rental.ToolId);
 
-            var workerEntity = await _context.Workers
-                .FirstOrDefaultAsync(r => r.Id == rental.WorkerId);
-
-            if (workerEntity != null)
+            if (toolEntity != null)
             {
-                workerEntity.Rentals.Add(rentalEntity);
-                await _context.SaveChangesAsync();
+                //присваиваем navigation property
+                rentalEntity.Tool = toolEntity;
 
-                return rental.ToolId;
+                rentalEntity.StartDate = DateTime.Now;
+                rentalEntity.Status = "Active";
+
+                var workerEntity = await _context.Workers
+                    .FirstOrDefaultAsync(w => w.Id == rental.WorkerId);
+
+                if (workerEntity != null)
+                {
+                    workerEntity.Rentals.Add(rentalEntity);
+                    await _context.SaveChangesAsync();
+
+                    return rental.ToolId;
+                }
             }
+
             throw new KeyNotFoundException();
         }
+
 
         public async Task<Guid> Delete(Guid workerId, Guid toolId)
         {
@@ -80,7 +91,7 @@ namespace Storage.Infrastructure.Repositories
             var rentalEntities = workers.SelectMany(r => r.Rentals).ToList();
             List<Rental> rentals = rentalEntities
                 .Select(r => new Rental(r.WorkerId, r.ToolId, r.StartDate, r.ReturnDate, 
-                r.Status, r.Worker, r.Tool)).ToList();
+                r.Status)).ToList();
 
             return rentals;
         }
@@ -106,9 +117,7 @@ namespace Storage.Infrastructure.Repositories
                     ToolId = toolId,
                     StartDate = startDate,
                     ReturnDate = returnDate,
-                    Status = status,
-                    Worker = worker,
-                    Tool = tool
+                    Status = status
                 };
 
                 //Добавляем новое состояние

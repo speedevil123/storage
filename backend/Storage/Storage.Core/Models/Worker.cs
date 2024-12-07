@@ -8,6 +8,7 @@ namespace Storage.Core.Models
 {
     public class Worker
     {
+        public Worker() { }
         public Worker(Guid id, string name, string position, 
             string department, string email, string phone, DateTime registrationDate)
         {
@@ -28,5 +29,7 @@ namespace Storage.Core.Models
         public DateTime RegistrationDate { get; } = new DateTime();
         public List<Tool> Tools { get; } = new List<Tool>();
         public List<Rental> Rentals { get; } = new List<Rental>();
+        public List<OperationHistory> OperationHistories { get; } = new List<OperationHistory>();
+
     }
 }

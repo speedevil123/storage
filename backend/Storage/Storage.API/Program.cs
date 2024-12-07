@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StorageDbContext>(
     options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(StorageDbContext)));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
 
 //builder.Services.AddScoped<IToolsService, ToolsService>();

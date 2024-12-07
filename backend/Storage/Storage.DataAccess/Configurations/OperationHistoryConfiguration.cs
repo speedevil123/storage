@@ -27,7 +27,7 @@ namespace Storage.Infrastructure.Configurations
                 .HasMaxLength(250);
 
             builder.HasOne(o => o.Worker)
-                .WithMany(w => w.OperationHistories)
+                .WithMany(o => o.OperationHistories)
                 .HasForeignKey(o => o.WorkerId);
 
             builder.HasOne(o => o.Tool)

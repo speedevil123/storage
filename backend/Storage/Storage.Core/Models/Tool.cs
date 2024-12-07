@@ -9,6 +9,7 @@ namespace Storage.Core.Models
     public class Tool
     {
         public const int MAX_STR_LENGTH = 50;
+        public Tool () { }
         public Tool(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
         {
             Id = id;
@@ -27,5 +28,7 @@ namespace Storage.Core.Models
         public bool IsTaken { get; } = false;
         public List<Worker> Workers { get; } = new List<Worker>();
         public List<Rental> Rentals { get; } = new List<Rental>();
+        public List<OperationHistory> OperationHistories { get; } = new List<OperationHistory>();
+
     }
 }
