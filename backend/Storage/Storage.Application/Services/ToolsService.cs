@@ -32,5 +32,8 @@ namespace Storage.Application.Services
         {
             return await _toolsRepository.Update(id, type, model, manufacturer, quantity, isTaken);
         }
+
+
     }
 }
+

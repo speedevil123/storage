@@ -17,24 +17,24 @@ namespace Storage.Application.Services
             _workerRepository = workerRepository;
         }
 
-        public Task<Guid> CreateWorker(Worker worker)
+        public async Task<Guid> CreateWorker(Worker worker)
         {
-            throw new NotImplementedException();
+            return await _workerRepository.Create(worker);
         }
 
-        public Task<Guid> DeleteWorker(Guid id)
+        public async Task<Guid> DeleteWorker(Guid id)
         {
-            throw new NotImplementedException();
+            return await _workerRepository.Delete(id);
         }
 
-        public Task<List<Worker>> GetAllWorkers()
+        public async Task<List<Worker>> GetAllWorkers()
         {
-            throw new NotImplementedException();
+            return await _workerRepository.Get();
         }
 
-        public Task<Guid> UpdateWorker(Guid id, string name, string position, string department, string email, string phone, DateTime registrationDate)
+        public async Task<Guid> UpdateWorker(Guid id, string name, string position, string department, string email, string phone, DateTime registrationDate)
         {
-            throw new NotImplementedException();
+            return await _workerRepository.Update(id, name, position, department, email, phone, registrationDate);
         }
     }
 }

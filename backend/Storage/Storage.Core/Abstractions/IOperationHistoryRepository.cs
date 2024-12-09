@@ -10,7 +10,7 @@ namespace Storage.Core.Abstractions
     public interface IOperationHistoryRepository
     {
         Task<Guid> Create(OperationHistory operationHistory);
-        Task<Guid> Delete(Guid id);
+        Task<Guid> Delete(Guid workerId, Guid toolId);
         Task<List<OperationHistory>> Get();
     }
 }

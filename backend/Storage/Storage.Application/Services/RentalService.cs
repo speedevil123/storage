@@ -17,24 +17,24 @@ namespace Storage.Application.Services
             _rentalRepository = rentalRepository;
         }
 
-        public Task<Guid> CreateRental(Rental rental)
+        public async Task<Guid> CreateRental(Rental rental)
         {
-            throw new NotImplementedException();
+            return await _rentalRepository.Create(rental);
         }
 
-        public Task<Guid> DeleteRental(Guid workerId, Guid toolId)
+        public async Task<Guid> DeleteRental(Guid workerId, Guid toolId)
         {
-            throw new NotImplementedException();
+            return await _rentalRepository.Delete(workerId, toolId);
         }
 
-        public Task<List<Rental>> GetAllRentals()
+        public async Task<List<Rental>> GetAllRentals()
         {
-            throw new NotImplementedException();
+            return await _rentalRepository.Get();
         }
 
-        public Task<Guid> UpdateRental(Guid workerId, Guid toolId, DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
+        public async Task<Guid> UpdateRental(Guid workerId, Guid toolId, DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
         {
-            throw new NotImplementedException();
+            return await _rentalRepository.Update(workerId, toolId, startDate, returnDate, status, worker, tool);
         }
     }
 }

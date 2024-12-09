@@ -41,9 +41,6 @@ namespace Storage.Infrastructure.Repositories
                 //присваиваем navigation property
                 rentalEntity.Tool = toolEntity;
 
-                rentalEntity.StartDate = DateTime.Now;
-                rentalEntity.Status = "Active";
-
                 var workerEntity = await _context.Workers
                     .FirstOrDefaultAsync(w => w.Id == rental.WorkerId);
 

@@ -17,19 +17,19 @@ namespace Storage.Application.Services
             _operationHistoryRepository = operationHistoryRepository;
         }
 
-        public Task<Guid> CreateOperationHistory(OperationHistory operationHistory)
+        public async Task<Guid> CreateOperationHistory(OperationHistory operationHistory)
         {
-            throw new NotImplementedException();
+            return await _operationHistoryRepository.Create(operationHistory);
         }
 
-        public Task<Guid> DeleteOperationHistory(Guid id)
+        public async Task<Guid> DeleteOperationHistory(Guid workerId, Guid toolId)
         {
-            throw new NotImplementedException();
+            return await _operationHistoryRepository.Delete(workerId, toolId);
         }
 
-        public Task<List<OperationHistory>> GetAllOperationHistory()
+        public async Task<List<OperationHistory>> GetAllOperationHistory()
         {
-            throw new NotImplementedException();
+            return await _operationHistoryRepository.Get();
         }
     }
 }
