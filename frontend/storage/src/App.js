@@ -1,13 +1,11 @@
 import './App.css';
+import ToolTable from './components/ToolTable'
 
-function App() {
+export default function App() 
+{ 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Home page</h1>
-      </header>
+      <ToolTable/>
     </div>
   );
 }
-
-export default App;

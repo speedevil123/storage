@@ -15,7 +15,7 @@ builder.Services.AddDbContext<StorageDbContext>(
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
     });
 
-//builder.Services.AddScoped<IToolsService, ToolsService>();
+builder.Services.AddScoped<IToolsService, ToolsService>();
 builder.Services.AddScoped<IToolsRepository, ToolsRepository>();
 
 var app = builder.Build();
