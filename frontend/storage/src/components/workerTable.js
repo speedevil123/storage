@@ -7,14 +7,14 @@ import {GETRequest} from '../request'
 //Response - ответ
 //Request - запрос
 
-function ToolTable() {
+function WorkerTable() {
 
-    const[tools, setTools] = useState([]);
+    const[workers, setWorkers] = useState([]);
 
-    const getTools = async () => {
+    const getWorkers = async () => {
         try {
-            const toolsData = await GETRequest('/Tools');
-            setTools(toolsData);
+            const workersData = await GETRequest('/Workers');
+            setTools(workersData);
         }
         catch (error) {
             console.error('Error fetching tools:', error);
@@ -24,16 +24,16 @@ function ToolTable() {
     //[] - пустые зависимости
     //значит только при открытии будет рендер
     useEffect(() => {
-        getTools();
+        getWorkers();
     }, [])
 
-    const dataSource = tools.map(tool => ({
-        key: tool.id,
-        name: tool.model,
-        type: tool.type,
-        manufacturer: tool.manufacturer,
-        quantity: tool.quantity,
-        isTaken: tool.isTaken
+    const dataSource = workers.map(worker => ({
+        key: worker.id,
+        name: worker.name,
+        pos: worker.type,
+        manufacturer: worker.manufacturer,
+        quantity: worker.quantity,
+        isTaken: worker.isTaken
     }));
       
     const columns = [
