@@ -2,8 +2,9 @@
 {
     public record ToolsResponse(
         Guid Id,
-        string Name,
+        string Type,
         string Model,
         string Manufacturer,
-        int Stock);
+        int Quantity,
+        bool isTaken);
 }
