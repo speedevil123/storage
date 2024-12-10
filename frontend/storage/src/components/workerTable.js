@@ -1,6 +1,6 @@
 import React from 'react';
 import {Table} from 'antd';
-import { useEffect, useState } from 'react';
+import {useEffect, useState } from 'react';
 import {GETRequest} from '../request'
 
 
@@ -14,10 +14,10 @@ function WorkerTable() {
     const getWorkers = async () => {
         try {
             const workersData = await GETRequest('/Workers');
-            setTools(workersData);
+            setWorkers(workersData);
         }
         catch (error) {
-            console.error('Error fetching tools:', error);
+            console.error('Error fetching workers:', error);
         }
     };
 
@@ -30,15 +30,16 @@ function WorkerTable() {
     const dataSource = workers.map(worker => ({
         key: worker.id,
         name: worker.name,
-        pos: worker.type,
-        manufacturer: worker.manufacturer,
-        quantity: worker.quantity,
-        isTaken: worker.isTaken
+        position: worker.position,
+        department: worker.department,
+        email: worker.email,
+        phone: worker.phone,
+        registrationDate: worker.registrationDate
     }));
       
     const columns = [
         {
-            title: 'Model',
+            title: 'Name',
             dataIndex: 'name',
             key: 'name',
             showSorterTooltip: {
@@ -46,26 +47,30 @@ function WorkerTable() {
             },
         },
         {
-            title: 'Type',
-            dataIndex: 'type',
-            key: 'type'
+            title: 'Position',
+            dataIndex: 'position',
+            key: 'position'
         },
         {
-            title: 'Manufacturer',
-            dataIndex: 'manufacturer',
-            key: 'manufacturer'
+            title: 'Department',
+            dataIndex: 'department',
+            key: 'department'
         },
         {
-            title: 'Quantity',
-            dataIndex: 'quantity',
-            key: 'quantity'
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email'
         },
         {
-            title: 'Is Taken',
-            dataIndex: 'isTaken',
-            key: 'isTaken',
-            render: (text) => text ? 'Yes' : 'No',
+            title: 'Phone',
+            dataIndex: 'phone',
+            key: 'phone'
         },
+        {
+            title: 'Registration Date',
+            dataIndex: 'registrationDate',
+            key: 'registrationDate'
+        }
     ];
 
       return (
@@ -74,12 +79,9 @@ function WorkerTable() {
             dataSource={dataSource} 
             columns={columns}
             pagination={{pageSize: 10}}
-            showSorterTooltip={{
-                target: 'sorter-icon',
-              }}
             />
         </div>
       );
 }
 
-export default ToolTable;
+export default WorkerTable;

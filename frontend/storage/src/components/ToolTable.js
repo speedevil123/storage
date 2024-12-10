@@ -30,7 +30,7 @@ function ToolTable() {
     //name-model???
     const dataSource = tools.map(tool => ({
         key: tool.id,
-        name: tool.model,
+        model: tool.model,
         type: tool.type,
         manufacturer: tool.manufacturer,
         quantity: tool.quantity,
@@ -40,8 +40,8 @@ function ToolTable() {
     const columns = [
         {
             title: 'Model',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'model',
+            key: 'model',
             showSorterTooltip: {
                 target: 'full-header',
             },
