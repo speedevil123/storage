@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.Services
 {
-    public class OperationHistoryService : IOperationHistoryService
+    public class OperationHistoriesService : IOperationHistoryService
     {
         private readonly IOperationHistoryRepository _operationHistoryRepository;
 
-        public OperationHistoryService(IOperationHistoryRepository operationHistoryRepository)
+        public OperationHistoriesService(IOperationHistoryRepository operationHistoryRepository)
         {
             _operationHistoryRepository = operationHistoryRepository;
         }

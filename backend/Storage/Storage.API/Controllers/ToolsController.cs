@@ -21,7 +21,8 @@ namespace Storage.Controllers
         {
             var tools = await _toolsService.GetAllTools();
 
-            var response = tools.Select(t => new ToolsResponse(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken));
+            var response = tools.Select(t => 
+                new ToolsResponse(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken));
 
             return Ok(response);
         }
@@ -37,7 +38,8 @@ namespace Storage.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<Guid>> UpdateTools(Guid id, [FromBody] ToolsRequest request)
         {
-            var toolId = await _toolsService.UpdateTool(id, request.Type, request.Model, request.Manufacturer, request.Quantity, request.isTaken);
+            var toolId = await _toolsService
+                .UpdateTool(id, request.Type, request.Model, request.Manufacturer, request.Quantity, request.isTaken);
             return Ok(toolId);
         }
 

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Storage.Application.Services
 {
-    public class WorkerService : IWorkerService
+    public class WorkersService : IWorkersService
     {
-        private readonly IWorkerRepository _workerRepository;
+        private readonly IWorkersRepository _workerRepository;
 
-        public WorkerService(IWorkerRepository workerRepository)
+        public WorkersService(IWorkersRepository workerRepository)
         {
             _workerRepository = workerRepository;
         }

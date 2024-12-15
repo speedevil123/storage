@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Storage.Infrastructure.Repositories
 {
-    public class WorkerRepository : IWorkerRepository
+    public class WorkerRepository : IWorkersRepository
     {
         private readonly StorageDbContext _context;
         public WorkerRepository(StorageDbContext context)

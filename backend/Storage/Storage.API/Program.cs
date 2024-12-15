@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Storage.Application.Services;
+using Storage.Core.Abstractions;
 using Storage.DataAccess;
 using Storage.DataAccess.Repositories;
+using Storage.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,12 @@ builder.Services.AddDbContext<StorageDbContext>(
 
 builder.Services.AddScoped<IToolsService, ToolsService>();
 builder.Services.AddScoped<IToolsRepository, ToolsRepository>();
+
+builder.Services.AddScoped<IWorkersService, WorkersService>();
+builder.Services.AddScoped<IWorkersRepository, WorkerRepository>();
+
+builder.Services.AddScoped<IOperationHistoryService, OperationHistoriesService>();
+builder.Services.AddScoped<IOperationHistoryRepository, OperationHistoriesRepository>();
 
 var app = builder.Build();
 

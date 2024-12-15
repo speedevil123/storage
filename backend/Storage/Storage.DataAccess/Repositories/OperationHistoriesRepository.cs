@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace Storage.Infrastructure.Repositories
 {
-    public class OperationHistoryRepository : IOperationHistoryRepository
+    public class OperationHistoriesRepository : IOperationHistoryRepository
     {
         private readonly StorageDbContext _context;
-        public OperationHistoryRepository(StorageDbContext context)
+        public OperationHistoriesRepository(StorageDbContext context)
         {
             _context = context;
         }
@@ -82,16 +82,20 @@ namespace Storage.Infrastructure.Repositories
         }
 
         //Навигационные свойства не присвоены в конструкторе
+        //Решить проблему с конструктором, o => new OperationHistory
         public async Task<List<OperationHistory>> Get()
         {
-            var workers = await _context.Workers.Include(r => r.OperationHistories)
+            var workers = await _context.Workers
+                .Include(w => w.OperationHistories)
+                .ThenInclude(o => o.Tool)
                 .ToListAsync();
 
-            var operationHistoryEntities = workers.SelectMany(r => r.OperationHistories).ToList();
-            List<OperationHistory> opertionHistories = operationHistoryEntities
+            var operationHistoryEntities = workers
+                .SelectMany(w => w.OperationHistories).ToList();
+            List<OperationHistory> operationHistories = operationHistoryEntities
                 .Select(o => new OperationHistory(o.Id, o.OperationType, o.ToolId, o.WorkerId, o.Date, o.Comment)).ToList();
 
-            return opertionHistories;
+            return operationHistories;
         }
     }
 }
