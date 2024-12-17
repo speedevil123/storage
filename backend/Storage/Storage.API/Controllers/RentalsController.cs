@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.API.Contracts;
 using Storage.Core.Abstractions;
+using Storage.Core.Models;
 
 namespace Storage.API.Controllers
 {
@@ -9,10 +10,12 @@ namespace Storage.API.Controllers
     public class RentalsController : ControllerBase
     {
         private readonly IRentalService _rentalService;
+        private readonly IOperationHistoryService _operationHistoryService;
         
-        public RentalsController(IRentalService rentalService)
+        public RentalsController(IRentalService rentalService, IOperationHistoryService operationHistoryService)
         {
             _rentalService = rentalService;
+            _operationHistoryService = operationHistoryService;
         }
 
         [HttpGet]
@@ -33,6 +36,29 @@ namespace Storage.API.Controllers
                     ));
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateRental([FromBody] RentalsRequest request)
+        {
+            var rental = new Rental(request.workerId, request.toolId, request.startDate, request.returnDate, request.status);
+            var rentalToolId = await _rentalService.CreateRental(rental);
+            return Ok(rentalToolId);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<Guid>> UpdateRental(Guid workerId, Guid toolId, [FromBody] RentalsRequest request)
+        {
+            var rentalToolId = await _rentalService
+                .UpdateRental(workerId, toolId, request.startDate, request.returnDate, request.status);
+            return Ok(rentalToolId);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> DeleteRental(Guid workerId, Guid toolId)
+        {
+            var rentalToolId = await _rentalService.DeleteRental(workerId, toolId);
+            return Ok(rentalToolId);
         }
     }
 }
