@@ -25,9 +25,9 @@ namespace Storage.API.Controllers
                 .Select(o => new OperationHistoriesResponse(
                     o.Id, 
                     o.OperationType,
-                    string.Concat(o.Tool?.Manufacturer ?? "Unkown Manufacturer", " ", 
-                        o.Tool?.Model ?? "Unknown Model"), 
-                    o.Worker?.Name ?? "Unknown Worker", o.Date, o.Comment));
+                    o.Worker?.Name ?? "Unknown Worker",
+                    string.Concat(o.Tool?.Manufacturer ?? "Unkown Manufacturer"," ", o.Tool?.Model ?? "Unknown Model"), 
+                    o.Date, o.Comment));
             
             return Ok(response);
         }
