@@ -45,7 +45,7 @@ namespace Storage.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OperationHistoryEntity",
+                name: "OperationHistories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -57,15 +57,15 @@ namespace Storage.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OperationHistoryEntity", x => x.Id);
+                    table.PrimaryKey("PK_OperationHistories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OperationHistoryEntity_Tools_ToolId",
+                        name: "FK_OperationHistories_Tools_ToolId",
                         column: x => x.ToolId,
                         principalTable: "Tools",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OperationHistoryEntity_Workers_WorkerId",
+                        name: "FK_OperationHistories_Workers_WorkerId",
                         column: x => x.WorkerId,
                         principalTable: "Workers",
                         principalColumn: "Id",
@@ -73,7 +73,7 @@ namespace Storage.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RentalEntity",
+                name: "Rentals",
                 columns: table => new
                 {
                     WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -84,77 +84,45 @@ namespace Storage.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RentalEntity", x => new { x.WorkerId, x.ToolId });
+                    table.PrimaryKey("PK_Rentals", x => new { x.WorkerId, x.ToolId });
                     table.ForeignKey(
-                        name: "FK_RentalEntity_Tools_ToolId",
+                        name: "FK_Rentals_Tools_ToolId",
                         column: x => x.ToolId,
                         principalTable: "Tools",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RentalEntity_Workers_WorkerId",
+                        name: "FK_Rentals_Workers_WorkerId",
                         column: x => x.WorkerId,
                         principalTable: "Workers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ToolEntityWorkerEntity",
-                columns: table => new
-                {
-                    ToolsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkersId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ToolEntityWorkerEntity", x => new { x.ToolsId, x.WorkersId });
-                    table.ForeignKey(
-                        name: "FK_ToolEntityWorkerEntity_Tools_ToolsId",
-                        column: x => x.ToolsId,
-                        principalTable: "Tools",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ToolEntityWorkerEntity_Workers_WorkersId",
-                        column: x => x.WorkersId,
-                        principalTable: "Workers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_OperationHistoryEntity_ToolId",
-                table: "OperationHistoryEntity",
+                name: "IX_OperationHistories_ToolId",
+                table: "OperationHistories",
                 column: "ToolId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OperationHistoryEntity_WorkerId",
-                table: "OperationHistoryEntity",
+                name: "IX_OperationHistories_WorkerId",
+                table: "OperationHistories",
                 column: "WorkerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RentalEntity_ToolId",
-                table: "RentalEntity",
+                name: "IX_Rentals_ToolId",
+                table: "Rentals",
                 column: "ToolId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ToolEntityWorkerEntity_WorkersId",
-                table: "ToolEntityWorkerEntity",
-                column: "WorkersId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OperationHistoryEntity");
+                name: "OperationHistories");
 
             migrationBuilder.DropTable(
-                name: "RentalEntity");
-
-            migrationBuilder.DropTable(
-                name: "ToolEntityWorkerEntity");
+                name: "Rentals");
 
             migrationBuilder.DropTable(
                 name: "Tools");

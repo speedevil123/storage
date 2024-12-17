@@ -12,7 +12,7 @@ using Storage.DataAccess;
 namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageDbContext))]
-    [Migration("20241209135143_init")]
+    [Migration("20241217043143_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -55,7 +55,7 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("OperationHistoryEntity");
+                    b.ToTable("OperationHistories");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.RentalEntity", b =>
@@ -81,7 +81,7 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasIndex("ToolId");
 
-                    b.ToTable("RentalEntity");
+                    b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.ToolEntity", b =>
@@ -159,21 +159,6 @@ namespace Storage.Infrastructure.Migrations
                     b.ToTable("Workers");
                 });
 
-            modelBuilder.Entity("ToolEntityWorkerEntity", b =>
-                {
-                    b.Property<Guid>("ToolsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WorkersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ToolsId", "WorkersId");
-
-                    b.HasIndex("WorkersId");
-
-                    b.ToTable("ToolEntityWorkerEntity");
-                });
-
             modelBuilder.Entity("Storage.Infrastructure.Entities.OperationHistoryEntity", b =>
                 {
                     b.HasOne("Storage.Infrastructure.Entities.ToolEntity", "Tool")
@@ -210,21 +195,6 @@ namespace Storage.Infrastructure.Migrations
                     b.Navigation("Tool");
 
                     b.Navigation("Worker");
-                });
-
-            modelBuilder.Entity("ToolEntityWorkerEntity", b =>
-                {
-                    b.HasOne("Storage.Infrastructure.Entities.ToolEntity", null)
-                        .WithMany()
-                        .HasForeignKey("ToolsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Storage.Infrastructure.Entities.WorkerEntity", null)
-                        .WithMany()
-                        .HasForeignKey("WorkersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.ToolEntity", b =>

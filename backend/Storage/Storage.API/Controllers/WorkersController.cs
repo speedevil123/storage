@@ -34,5 +34,22 @@ namespace Storage.API.Controllers
             var workerId = await _workersService.CreateWorker(worker);
             return Ok(workerId);
         }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<Guid>> UpdateWorker(Guid id, [FromBody] WorkersRequest request)
+        {
+            var workerId = await _workersService
+                .UpdateWorker(id, request.Name, request.Position, request.Department, request.Email,
+                request.Phone, request.RegistrationDate);
+
+            return Ok(workerId);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> DeleteWorker(Guid id)
+        {
+            var workerId = await _workersService.DeleteWorker(id);
+            return Ok(workerId);
+        }
     }
 }

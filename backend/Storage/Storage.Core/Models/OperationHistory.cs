@@ -10,7 +10,7 @@ namespace Storage.Core.Models
     {
         public OperationHistory() { }
         public OperationHistory(Guid id, string operationType, Guid toolId, Guid workerId,
-            DateTime date, string comment) 
+            DateTime date, string comment, Tool? tool, Worker? worker) 
         {
             Id = id;
             OperationType = operationType;
@@ -18,6 +18,8 @@ namespace Storage.Core.Models
             WorkerId = workerId;
             Date = date;
             Comment = comment;
+            Tool = tool;
+            Worker = worker;
         }
         public Guid Id { get;}
         public string OperationType { get; } = string.Empty;

@@ -36,7 +36,7 @@ namespace Storage.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<Guid>> UpdateTools(Guid id, [FromBody] ToolsRequest request)
+        public async Task<ActionResult<Guid>> UpdateTool(Guid id, [FromBody] ToolsRequest request)
         {
             var toolId = await _toolsService
                 .UpdateTool(id, request.Type, request.Model, request.Manufacturer, request.Quantity, request.isTaken);

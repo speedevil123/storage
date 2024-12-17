@@ -19,7 +19,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult<List<OperationHistoriesResponse>>> GetOperationHistories()
         {
             var operationHistories = await _operationHistoryService
-                .GetAllOperationHistory();
+                .GetAllOperationHistories();
 
             var response = operationHistories
                 .Select(o => new OperationHistoriesResponse(

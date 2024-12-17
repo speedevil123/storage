@@ -24,14 +24,45 @@ namespace Storage.Infrastructure.Repositories
         public async Task<List<OperationHistory>> Get()
         {
             var operationHistoryEntities = await _context.OperationHistories
+                .Include(e => e.Tool)
+                .Include(e => e.Worker)
                 .AsNoTracking()
                 .ToListAsync();
 
-            var operationHistories = operationHistoryEntities
-                .Select(o => new OperationHistory(o.Id, o.OperationType, o.ToolId, o.WorkerId, o.Date, o.Comment))
-                .ToList();
+            return operationHistoryEntities.Select(MapToDomain).ToList();
+        }
 
-            return operationHistories;
+        //Вопрос можно ли тут оставлять маппер??
+        private OperationHistory MapToDomain(OperationHistoryEntity entity)
+        {
+            return new OperationHistory(
+                entity.Id,
+                entity.OperationType,
+                entity.ToolId,
+                entity.WorkerId,
+                entity.Date,
+                entity.Comment,
+
+                //Прописываем Tool
+                entity.Tool != null ? 
+                new Tool(entity.Tool.Id, 
+                    entity.Tool.Type, 
+                    entity.Tool.Model, 
+                    entity.Tool.Manufacturer, 
+                    entity.Tool.Quantity, 
+                    entity.Tool.IsTaken) : null,
+               
+                //Прописываем Worker
+                entity.Worker != null ? 
+                new Worker(
+                    entity.Worker.Id, 
+                    entity.Worker.Name, 
+                    entity.Worker.Position, 
+                    entity.Worker.Department, 
+                    entity.Worker.Email, 
+                    entity.Worker.Phone, 
+                    entity.Worker.RegistrationDate) : null
+            );
         }
     }
 }
