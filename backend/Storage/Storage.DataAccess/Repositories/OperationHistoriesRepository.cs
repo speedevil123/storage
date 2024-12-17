@@ -21,79 +21,15 @@ namespace Storage.Infrastructure.Repositories
             _context = context;
         }
 
-        //Возможно исправление на присвоение полей с временем и типом операции
-        //Брать их с уже созданного rental 
-        public async Task<Guid> Create(OperationHistory operationHistory)
-        {
-            var operationHistoryEntity = new OperationHistoryEntity
-            {
-                Id = operationHistory.Id,
-                OperationType = operationHistory.OperationType,
-                ToolId = operationHistory.ToolId,
-                WorkerId = operationHistory.WorkerId,
-                Date = operationHistory.Date,
-                Comment = operationHistory.Comment
-            };
-
-            var toolEntity = await _context.Tools
-                .FirstOrDefaultAsync(t => t.Id == operationHistory.ToolId);
-
-            if (toolEntity != null)
-            {
-                operationHistoryEntity.Tool = toolEntity;
-
-                var workerEntity = await _context.Workers
-                    .FirstOrDefaultAsync(w => w.Id == operationHistory.WorkerId);
-
-                if(workerEntity != null)
-                {
-                    workerEntity.OperationHistories.Add(operationHistoryEntity);
-                    await _context.SaveChangesAsync();
-
-                    return operationHistory.ToolId;
-                }
-            }
-
-            throw new KeyNotFoundException();
-        }
-
-        public async Task<Guid> Delete(Guid workerId, Guid toolId)
-        {
-            //Получаем воркера
-            var workerEntity = await _context.Workers
-                .Include(r => r.OperationHistories).FirstOrDefaultAsync(r => r.Id == workerId);
-
-            if (workerEntity != null)
-            {
-                //Через workerEntity получаем operationHistoryEntity
-                var operationHistoryEntity = workerEntity.OperationHistories
-                    .FirstOrDefault(r => r.ToolId == toolId);
-
-
-                if (operationHistoryEntity != null)
-                {
-                    workerEntity.OperationHistories.Remove(operationHistoryEntity);
-                    await _context.SaveChangesAsync();
-                    return toolId;
-                }
-            }
-
-            throw new KeyNotFoundException();
-        }
-
-        //Навигационные свойства не присвоены в конструкторе
-        //Решить проблему с конструктором, o => new OperationHistory
         public async Task<List<OperationHistory>> Get()
         {
-            var workers = await _context.Workers
-                .Include(w => w.OperationHistories)
-                .ThenInclude(o => o.Tool)
+            var operationHistoryEntities = await _context.OperationHistories
+                .AsNoTracking()
                 .ToListAsync();
 
-            var operationHistoryEntities = workers
-                .SelectMany(w => w.OperationHistories).ToList();
-            List<OperationHistory> operationHistories = operationHistoryEntities
-                .Select(o => new OperationHistory(o.Id, o.OperationType, o.ToolId, o.WorkerId, o.Date, o.Comment)).ToList();
+            var operationHistories = operationHistoryEntities
+                .Select(o => new OperationHistory(o.Id, o.OperationType, o.ToolId, o.WorkerId, o.Date, o.Comment))
+                .ToList();
 
             return operationHistories;
         }

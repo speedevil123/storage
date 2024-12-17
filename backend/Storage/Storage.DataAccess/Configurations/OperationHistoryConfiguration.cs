@@ -23,7 +23,7 @@ namespace Storage.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(o => o.Comment)
-                .IsRequired(false) // Nullable
+                .IsRequired(false) 
                 .HasMaxLength(250);
 
             builder.HasOne(o => o.Worker)

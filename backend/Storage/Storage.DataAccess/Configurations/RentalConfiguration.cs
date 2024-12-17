@@ -14,13 +14,13 @@ namespace Storage.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<RentalEntity> builder)
         {
-            builder.HasKey(r => new { r.WorkerId, r.ToolId }); // Composite key if needed
+            builder.HasKey(r => new { r.WorkerId, r.ToolId }); 
 
             builder.Property(r => r.StartDate)
                 .IsRequired();
 
             builder.Property(r => r.ReturnDate)
-                .IsRequired(); // Nullable
+                .IsRequired(); 
 
             builder.Property(r => r.Status)
                 .IsRequired()

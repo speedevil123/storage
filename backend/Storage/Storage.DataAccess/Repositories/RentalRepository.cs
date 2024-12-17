@@ -7,6 +7,7 @@ using Storage.Infrastructure.Entities;
 using Storage.Infrastructure.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,105 +25,104 @@ namespace Storage.Infrastructure.Repositories
 
         public async Task<Guid> Create(Rental rental)
         {
+            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == rental.WorkerId);
+            var tool = await _context.Tools.FirstOrDefaultAsync(t => t.Id == rental.ToolId);
+
+            if(worker == null)
+            {
+                throw new KeyNotFoundException($"Worker with id {rental.WorkerId} not found");
+            }
+
+            if (tool == null)
+            {
+                throw new KeyNotFoundException($"Tool with id {rental.ToolId} not found");
+            }
+
             var rentalEntity = new RentalEntity
             {
                 WorkerId = rental.WorkerId,
                 ToolId = rental.ToolId,
                 StartDate = rental.StartDate,
                 ReturnDate = rental.ReturnDate,
-                Status = rental.Status
+                Status = rental.Status,
+
+                //Navigation Properties
+                Worker = worker,
+                Tool = tool
             };
 
-            var toolEntity = await _context.Tools
-                .FirstOrDefaultAsync(t => t.Id == rental.ToolId);
+            await _context.Rentals.AddAsync(rentalEntity);
+            await _context.SaveChangesAsync();
 
-            if (toolEntity != null)
-            {
-                //присваиваем navigation property
-                rentalEntity.Tool = toolEntity;
-
-                var workerEntity = await _context.Workers
-                    .FirstOrDefaultAsync(w => w.Id == rental.WorkerId);
-
-                if (workerEntity != null)
-                {
-                    workerEntity.Rentals.Add(rentalEntity);
-                    await _context.SaveChangesAsync();
-
-                    return rental.ToolId;
-                }
-            }
-
-            throw new KeyNotFoundException();
+            return rentalEntity.ToolId;
         }
 
 
         public async Task<Guid> Delete(Guid workerId, Guid toolId)
         {
-            //Получаем воркера
-            var workerEntity = await _context.Workers
-                .Include(r => r.Rentals).FirstOrDefaultAsync(r => r.Id == workerId);
+            var rentalExists = await _context.Rentals
+               .AnyAsync(r => r.WorkerId == workerId && r.ToolId == toolId);
 
-            if(workerEntity != null)
+            if (!rentalExists)
             {
-                //Через workerEntity получаем rentalEntity
-                var rentalEntity = workerEntity.Rentals.FirstOrDefault(r => r.ToolId == toolId);
-
-
-                if (rentalEntity != null)
-                {
-                    workerEntity.Rentals.Remove(rentalEntity);
-                    await _context.SaveChangesAsync();
-                    return toolId;
-                }
+                throw new KeyNotFoundException("RentalEntity not found");
             }
 
-            throw new KeyNotFoundException();
+            await _context.Rentals
+                .Where(r => r.WorkerId == workerId && r.ToolId == toolId)
+                .ExecuteDeleteAsync();
+
+            return toolId;
         }
 
         public async Task<List<Rental>> Get()
         {
-            var workers = await _context.Workers.Include(r => r.Rentals)
+            var rentalEntities = await _context.Rentals
+                .AsNoTracking()
                 .ToListAsync();
 
-            var rentalEntities = workers.SelectMany(r => r.Rentals).ToList();
-            List<Rental> rentals = rentalEntities
-                .Select(r => new Rental(r.WorkerId, r.ToolId, r.StartDate, r.ReturnDate, 
-                r.Status)).ToList();
+            var rentals = rentalEntities
+                .Select(r => new Rental(r.WorkerId, r.ToolId, r.StartDate, r.ReturnDate, r.Status))
+                .ToList();
 
             return rentals;
         }
 
         public async Task<Guid> Update(Guid workerId, Guid toolId,
-            DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
+            DateTime startDate, DateTime returnDate, string status)
         {
-            var workerEntity = await _context.Workers
-                .FirstOrDefaultAsync(r => r.Id == workerId);
+            var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerId);
+            var tool = await _context.Tools.FirstOrDefaultAsync(t => t.Id == toolId);
 
-            //Подтягиваем рентал
-            var rentalEntity = workerEntity.Rentals.FirstOrDefault(r => r.ToolId == toolId);
-
-            if(rentalEntity != null)
+            if (worker == null)
             {
-                //Удаляем старое состояние
-                workerEntity.Rentals.Remove(rentalEntity);
-
-                //Обновляем
-                rentalEntity = new RentalEntity
-                {
-                    WorkerId = workerId,
-                    ToolId = toolId,
-                    StartDate = startDate,
-                    ReturnDate = returnDate,
-                    Status = status
-                };
-
-                //Добавляем новое состояние
-                workerEntity.Rentals.Add(rentalEntity);
-                await _context.SaveChangesAsync();
+                throw new KeyNotFoundException($"Worker with id {workerId} not found");
             }
 
-            throw new KeyNotFoundException("The rental record was not found.");
+            if (tool == null)
+            {
+                throw new KeyNotFoundException($"Tool with id {toolId} not found");
+            }
+
+            var rentalExists = await _context.Rentals
+                .AnyAsync(r => r.WorkerId == workerId && r.ToolId == toolId);
+
+            if (!rentalExists)
+            {
+                throw new KeyNotFoundException("RentalEntity not found");
+            }
+
+            await _context.Rentals
+                .Where(r => r.WorkerId == workerId && r.ToolId == toolId)
+                .ExecuteUpdateAsync(s => s
+                .SetProperty(r => r.StartDate, r => startDate)
+                .SetProperty(r => r.ReturnDate, r => returnDate)
+                .SetProperty(r => r.Status, r => status)
+                .SetProperty(r => r.Worker, r => worker)
+                .SetProperty(r => r.Tool, r => tool));
+
+            return toolId;
         }
+
     }
 }

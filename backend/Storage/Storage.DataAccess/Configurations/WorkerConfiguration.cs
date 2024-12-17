@@ -37,14 +37,6 @@ namespace Storage.Infrastructure.Configurations
 
             builder.Property(w => w.RegistrationDate)
                 .IsRequired();
-
-            builder.HasMany(w => w.Rentals)
-                .WithOne(r => r.Worker)
-                .HasForeignKey(r => r.WorkerId);
-
-            builder.HasMany(w => w.OperationHistories)
-                .WithOne(o => o.Worker)
-                .HasForeignKey(o => o.WorkerId);
         }
     }
 

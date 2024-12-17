@@ -32,9 +32,9 @@ namespace Storage.Application.Services
             return await _rentalRepository.Get();
         }
 
-        public async Task<Guid> UpdateRental(Guid workerId, Guid toolId, DateTime startDate, DateTime returnDate, string status, Worker worker, Tool tool)
+        public async Task<Guid> UpdateRental(Guid workerId, Guid toolId, DateTime startDate, DateTime returnDate, string status)
         {
-            return await _rentalRepository.Update(workerId, toolId, startDate, returnDate, status, worker, tool);
+            return await _rentalRepository.Update(workerId, toolId, startDate, returnDate, status);
         }
     }
 }

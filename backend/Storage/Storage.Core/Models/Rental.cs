@@ -26,7 +26,7 @@ namespace Storage.Core.Models
         public Guid WorkerId { get; }
         public Guid ToolId { get; }
 
-        public Worker? Worker { get;} 
-        public Tool? Tool { get;} 
+        public Worker? Worker { get; } 
+        public Tool? Tool { get; } 
     }
 }

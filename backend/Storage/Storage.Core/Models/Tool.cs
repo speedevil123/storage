@@ -26,7 +26,6 @@ namespace Storage.Core.Models
         public string Manufacturer { get; } = string.Empty;
         public int Quantity { get; } = 0;
         public bool IsTaken { get; } = false;
-        public List<Worker> Workers { get; } = new List<Worker>();
         public List<Rental> Rentals { get; } = new List<Rental>();
         public List<OperationHistory> OperationHistories { get; } = new List<OperationHistory>();
 

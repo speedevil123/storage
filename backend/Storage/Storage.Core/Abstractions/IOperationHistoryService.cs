@@ -9,8 +9,6 @@ namespace Storage.Core.Abstractions
 {
     public interface IOperationHistoryService
     {
-        Task<Guid> CreateOperationHistory(OperationHistory operationHistory);
-        Task<Guid> DeleteOperationHistory(Guid workerId, Guid toolId);
-        Task<List<OperationHistory>> GetAllOperationHistory();
+        Task<List<OperationHistory>> GetAllOperationHistories();
     }
 }

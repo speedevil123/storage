@@ -17,17 +17,7 @@ namespace Storage.Application.Services
             _operationHistoryRepository = operationHistoryRepository;
         }
 
-        public async Task<Guid> CreateOperationHistory(OperationHistory operationHistory)
-        {
-            return await _operationHistoryRepository.Create(operationHistory);
-        }
-
-        public async Task<Guid> DeleteOperationHistory(Guid workerId, Guid toolId)
-        {
-            return await _operationHistoryRepository.Delete(workerId, toolId);
-        }
-
-        public async Task<List<OperationHistory>> GetAllOperationHistory()
+        public async Task<List<OperationHistory>> GetAllOperationHistories()
         {
             return await _operationHistoryRepository.Get();
         }

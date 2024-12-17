@@ -38,14 +38,6 @@ namespace Storage.DataAccess.Configurations
             builder.Property(t => t.IsTaken)
                 .IsRequired()
                 .HasDefaultValue(false);
-
-            builder.HasMany(t => t.Rentals)
-                .WithOne(r => r.Tool)
-                .HasForeignKey(r => r.ToolId);
-
-            builder.HasMany(t => t.OperationHistories)
-                .WithOne(o => o.Tool)
-                .HasForeignKey(o => o.ToolId);
         }
     }
 

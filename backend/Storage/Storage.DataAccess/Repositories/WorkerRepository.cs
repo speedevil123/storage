@@ -5,6 +5,7 @@ using Storage.DataAccess;
 using Storage.Infrastructure.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,14 @@ namespace Storage.Infrastructure.Repositories
 
         public async Task<Guid> Delete(Guid id)
         {
+            var workerExists = await _context.Workers
+                .AnyAsync(w => w.Id == id);
+
+            if (!workerExists)
+            {
+                throw new KeyNotFoundException("WorkerEntity not found");
+            }
+
             await _context.Workers
                 .Where(w => w.Id == id)
                 .ExecuteDeleteAsync();
@@ -61,6 +70,14 @@ namespace Storage.Infrastructure.Repositories
 
         public async Task<Guid> Update(Guid id, string name, string position, string department, string email, string phone, DateTime registrationDate)
         {
+            var workerExists = await _context.Workers
+                .AnyAsync(w => w.Id == id);
+
+            if (!workerExists)
+            {
+                throw new KeyNotFoundException("WorkerEntity not found");
+            }
+
             await _context.Workers
                 .Where(w => w.Id == id)
                 .ExecuteUpdateAsync(w => w

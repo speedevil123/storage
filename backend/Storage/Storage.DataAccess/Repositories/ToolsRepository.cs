@@ -37,6 +37,14 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<Guid> Delete(Guid id)
         {
+            var toolExists = await _context.Tools
+                .AnyAsync(w => w.Id == id);
+
+            if (!toolExists)
+            {
+                throw new KeyNotFoundException("ToolEntity not found");
+            }
+
             await _context.Tools
                 .Where(t => t.Id == id)
                 .ExecuteDeleteAsync();
@@ -59,6 +67,14 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<Guid> Update(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
         {
+            var toolExists = await _context.Tools
+                .AnyAsync(w => w.Id == id);
+
+            if (!toolExists)
+            {
+                throw new KeyNotFoundException("ToolEntity not found");
+            }
+
             await _context.Tools
                 .Where(t => t.Id == id)
                 .ExecuteUpdateAsync(s => s
