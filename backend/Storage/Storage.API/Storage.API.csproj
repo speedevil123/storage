@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,7 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Storage.Application\Storage.Application.csproj" />
-    <ProjectReference Include="..\Storage.DataAccess\Storage.Infrastructure.csproj" />
+    <ProjectReference Include="..\Storage.Infrastructure\Storage.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
