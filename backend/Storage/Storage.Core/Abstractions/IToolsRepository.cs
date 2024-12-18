@@ -8,6 +8,6 @@ namespace Storage.DataAccess.Repositories
         Task<Guid> Delete(Guid id);
         Task<List<Tool>> Get();
         Task<Guid> Update(Guid id, string type, string model,
-            string manufacturer, int quantity, bool isTaken);
+            string manufacturer, int quantity);
     }
 }

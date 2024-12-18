@@ -34,10 +34,6 @@ namespace Storage.DataAccess.Configurations
             builder.Property(t => t.Quantity)
                 .IsRequired()
                 .HasDefaultValue(0);
-
-            builder.Property(t => t.IsTaken)
-                .IsRequired()
-                .HasDefaultValue(false);
         }
     }
 

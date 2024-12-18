@@ -23,8 +23,8 @@ builder.Services.AddScoped<IToolsRepository, ToolsRepository>();
 builder.Services.AddScoped<IWorkersService, WorkersService>();
 builder.Services.AddScoped<IWorkersRepository, WorkerRepository>();
 
-builder.Services.AddScoped<IOperationHistoryService, OperationHistoriesService>();
-builder.Services.AddScoped<IOperationHistoryRepository, OperationHistoriesRepository>();
+builder.Services.AddScoped<IRentalService, RentalService>();
+builder.Services.AddScoped<IRentalRepository, RentalRepository>();
 
 var app = builder.Build();
 

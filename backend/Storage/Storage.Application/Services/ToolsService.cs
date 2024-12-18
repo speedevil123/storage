@@ -28,9 +28,9 @@ namespace Storage.Application.Services
             return await _toolsRepository.Get();
         }
 
-        public async Task<Guid> UpdateTool(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
+        public async Task<Guid> UpdateTool(Guid id, string type, string model, string manufacturer, int quantity)
         {
-            return await _toolsRepository.Update(id, type, model, manufacturer, quantity, isTaken);
+            return await _toolsRepository.Update(id, type, model, manufacturer, quantity);
         }
 
 

@@ -14,8 +14,6 @@ namespace Storage.Infrastructure.Entities
         public string Model { get; set; } = string.Empty;
         public string Manufacturer { get; set; } = string.Empty;
         public int Quantity { get; set; } = 0;
-        public bool IsTaken { get; set; } = false;
         public List<RentalEntity> Rentals { get; } = new List<RentalEntity>();
-        public List<OperationHistoryEntity> OperationHistories { get; } = new List<OperationHistoryEntity>();
     }
 }

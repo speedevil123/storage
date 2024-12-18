@@ -8,26 +8,18 @@ namespace Storage.Core.Models
 {
     public class Tool
     {
-        public const int MAX_STR_LENGTH = 50;
-        public Tool () { }
-        public Tool(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
+        public Tool(Guid id, Guid modelId, Guid manufacturerId, int quantity)
         {
             Id = id;
-            Type = type;
-            Model = model;
-            Manufacturer = manufacturer;
+            ModelId = modelId;
+            ManufacturerId = manufacturerId;
             Quantity = quantity;
-            IsTaken = isTaken;
         }
-
         public Guid Id { get; }
-        public string Type { get; } = string.Empty;
-        public string Model { get; } = string.Empty;
-        public string Manufacturer { get; } = string.Empty;
+        public Guid ModelId { get; }
+        public Guid ManufacturerId { get; }
         public int Quantity { get; } = 0;
-        public bool IsTaken { get; } = false;
         public List<Rental> Rentals { get; } = new List<Rental>();
-        public List<OperationHistory> OperationHistories { get; } = new List<OperationHistory>();
 
     }
 }

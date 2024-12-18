@@ -25,8 +25,7 @@ namespace Storage.DataAccess.Repositories
                 Type = tool.Type,
                 Model = tool.Model,
                 Manufacturer = tool.Manufacturer,
-                Quantity = tool.Quantity,
-                IsTaken = tool.IsTaken
+                Quantity = tool.Quantity
             };
 
             await _context.Tools.AddAsync(toolEntity);
@@ -59,13 +58,13 @@ namespace Storage.DataAccess.Repositories
                 .ToListAsync();
 
             var tools = toolEntities
-                .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken))
+                .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity))
                 .ToList();
 
             return tools;
         }
 
-        public async Task<Guid> Update(Guid id, string type, string model, string manufacturer, int quantity, bool isTaken)
+        public async Task<Guid> Update(Guid id, string type, string model, string manufacturer, int quantity)
         {
             var toolExists = await _context.Tools
                 .AnyAsync(w => w.Id == id);
@@ -81,8 +80,7 @@ namespace Storage.DataAccess.Repositories
                     .SetProperty(t => t.Type, t => type)
                     .SetProperty(t => t.Model, t => model)
                     .SetProperty(t => t.Manufacturer, t => manufacturer)
-                    .SetProperty(t => t.Quantity, t => quantity)
-                    .SetProperty(t => t.IsTaken, t => isTaken));
+                    .SetProperty(t => t.Quantity, t => quantity));
 
             return id;
         }

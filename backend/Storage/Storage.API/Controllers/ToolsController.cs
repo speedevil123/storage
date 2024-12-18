@@ -22,7 +22,7 @@ namespace Storage.Controllers
             var tools = await _toolsService.GetAllTools();
 
             var response = tools.Select(t => 
-                new ToolsResponse(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity, t.IsTaken));
+                new ToolsResponse(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity));
 
             return Ok(response);
         }
@@ -30,7 +30,7 @@ namespace Storage.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateTool([FromBody] ToolsRequest request)
         {
-            var tool = new Tool(Guid.NewGuid(), request.Type, request.Model, request.Manufacturer, request.Quantity, request.isTaken);
+            var tool = new Tool(Guid.NewGuid(), request.Type, request.Model, request.Manufacturer, request.Quantity);
             var toolId = await _toolsService.CreateTool(tool);
             return Ok(toolId);
         }
@@ -39,7 +39,7 @@ namespace Storage.Controllers
         public async Task<ActionResult<Guid>> UpdateTool(Guid id, [FromBody] ToolsRequest request)
         {
             var toolId = await _toolsService
-                .UpdateTool(id, request.Type, request.Model, request.Manufacturer, request.Quantity, request.isTaken);
+                .UpdateTool(id, request.Type, request.Model, request.Manufacturer, request.Quantity);
             return Ok(toolId);
         }
 

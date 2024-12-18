@@ -17,7 +17,6 @@ namespace Storage.Infrastructure.Entities
         public string Phone { get; set; } = string.Empty;
         public DateTime RegistrationDate { get; set; } = new DateTime();
         public List<RentalEntity> Rentals { get; } = new List<RentalEntity>();
-        public List<OperationHistoryEntity> OperationHistories { get; } = new List<OperationHistoryEntity>();
 
     }
 }

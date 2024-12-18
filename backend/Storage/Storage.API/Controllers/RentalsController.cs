@@ -10,12 +10,10 @@ namespace Storage.API.Controllers
     public class RentalsController : ControllerBase
     {
         private readonly IRentalService _rentalService;
-        private readonly IOperationHistoryService _operationHistoryService;
         
-        public RentalsController(IRentalService rentalService, IOperationHistoryService operationHistoryService)
+        public RentalsController(IRentalService rentalService)
         {
             _rentalService = rentalService;
-            _operationHistoryService = operationHistoryService;
         }
 
         [HttpGet]

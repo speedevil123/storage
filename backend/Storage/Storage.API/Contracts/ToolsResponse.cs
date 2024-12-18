@@ -5,6 +5,5 @@
         string Type,
         string Model,
         string Manufacturer,
-        int Quantity,
-        bool isTaken);
+        int Quantity);
 }

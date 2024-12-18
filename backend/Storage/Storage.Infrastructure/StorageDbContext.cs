@@ -13,14 +13,12 @@ namespace Storage.DataAccess
         public DbSet<ToolEntity> Tools { get; set; }
         public DbSet<WorkerEntity> Workers { get; set; }
         public DbSet<RentalEntity> Rentals { get; set; }
-        public DbSet<OperationHistoryEntity> OperationHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ToolConfiguration());
             modelBuilder.ApplyConfiguration(new WorkerConfiguration());
             modelBuilder.ApplyConfiguration(new RentalConfiguration());
-            modelBuilder.ApplyConfiguration(new OperationHistoryConfiguration());
         }
     }
 }

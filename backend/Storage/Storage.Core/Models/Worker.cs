@@ -12,6 +12,7 @@ namespace Storage.Core.Models
         public Worker(Guid id, string name, string position, 
             string department, string email, string phone, DateTime registrationDate)
         {
+            Id = id;
             Name = name;
             Position = position;
             Department = department;
@@ -28,7 +29,6 @@ namespace Storage.Core.Models
         public string Phone { get; } = string.Empty;
         public DateTime RegistrationDate { get; } = new DateTime();
         public List<Rental> Rentals { get; } = new List<Rental>();
-        public List<OperationHistory> OperationHistories { get; } = new List<OperationHistory>();
 
     }
 }
