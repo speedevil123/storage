@@ -20,8 +20,9 @@ namespace Storage.Core.Models
         public Guid Id { get; }
         public double Fine { get; }
         public DateTime PenaltyDate { get; }
+
         //Navigation + ForeignKey
         public Guid RentalId { get; }
-        public Rental Rental { get; }
+        public Rental? Rental { get; }
     }
 }

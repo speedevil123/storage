@@ -8,7 +8,18 @@ namespace Storage.Core.Models
 {
     public class Worker
     {
-
+        public Worker(Guid id, string name, string position, string email, string phone, 
+            DateTime registrationDate, Guid departmentId, Department department)
+        {
+            Id = id;
+            Name = name;
+            Position = position;
+            Email = email;
+            Phone = phone;
+            RegistrationDate = registrationDate;
+            DepartmentId = departmentId;
+            Department = department;
+        }
 
         public Guid Id { get;}
         public string Name { get;} = string.Empty;
@@ -16,9 +27,10 @@ namespace Storage.Core.Models
         public string Email { get; } = string.Empty;
         public string Phone { get; } = string.Empty;
         public DateTime RegistrationDate { get; } = new DateTime();
+
         //Navigation + ForeignKey
         public Guid DepartmentId { get; }
-        public Department Department { get; }
+        public Department? Department { get; }
 
         public List<Rental> Rentals { get; } = new List<Rental>();
 

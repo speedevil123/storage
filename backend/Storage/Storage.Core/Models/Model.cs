@@ -18,8 +18,9 @@ namespace Storage.Core.Models
 
         public Guid Id { get; }
         public string Name { get; }
+
         //Navigation + ForeignKey
         public Guid CategoryId { get; }
-        public Category Category { get; }
+        public Category? Category { get; }
     }
 }
