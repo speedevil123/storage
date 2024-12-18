@@ -10,5 +10,7 @@ namespace Storage.Infrastructure.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+
+        public List<ModelEntity> Models { get; set; } = new List<ModelEntity>();
     }
 }

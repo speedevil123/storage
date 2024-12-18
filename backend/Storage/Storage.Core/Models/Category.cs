@@ -16,5 +16,7 @@ namespace Storage.Core.Models
 
         public Guid Id { get; }
         public string Name { get; }
+
+        public List<Model> Models { get; } = new List<Model>();
     }
 }

@@ -32,5 +32,7 @@ namespace Storage.Core.Models
 
         public Worker? Worker { get; } 
         public Tool? Tool { get; } 
+
+        public List<Penalty> Penalties { get; } = new List<Penalty>();
     }
 }

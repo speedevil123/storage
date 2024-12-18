@@ -15,9 +15,9 @@ namespace Storage.Infrastructure.Entities
         //Navigation + ForeignKey
         public Guid ModelId { get; set; }
         public Guid ManufacturerId { get; set; }
-        public Model? Model { get; set; }
-        public Manufacturer? Manufacturer { get; set;}
+        public ModelEntity? Model { get; set; }
+        public ManufacturerEntity? Manufacturer { get; set;}
 
-        public List<Rental> Rentals { get; set; } = new List<Rental>();
+        public List<RentalEntity> Rentals { get; set; } = new List<RentalEntity>();
     }
 }

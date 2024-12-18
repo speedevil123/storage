@@ -22,6 +22,9 @@ namespace Storage.Infrastructure.Configurations
             builder.Property(r => r.ReturnDate)
                 .IsRequired(); 
 
+            builder.Property(r => r.EndDate)
+                .IsRequired();
+
             builder.Property(r => r.Status)
                 .IsRequired()
                 .HasMaxLength(20);

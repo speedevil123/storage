@@ -24,5 +24,8 @@ namespace Storage.Core.Models
         public string Email { get; }
         public string Country { get; }
         public string PostIndex { get; }
+
+        //Navigation
+        public Tool? Tool { get; }
     }
 }

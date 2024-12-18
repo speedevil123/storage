@@ -22,5 +22,8 @@ namespace Storage.Core.Models
         public string PhoneNumber { get; }
         public string Email { get; }
         public string Address { get; }
+
+        //Navigation
+        public Worker Worker { get; }
     }
 }

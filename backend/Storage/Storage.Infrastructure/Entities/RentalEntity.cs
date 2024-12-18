@@ -22,5 +22,8 @@ namespace Storage.Infrastructure.Entities
 
         public WorkerEntity? Worker { get; set; }
         public ToolEntity? Tool { get; set; }
+
+        public List<PenaltyEntity> Penalties { get; } = new List<PenaltyEntity>();
+
     }
 }

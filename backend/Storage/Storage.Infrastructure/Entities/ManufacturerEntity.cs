@@ -14,5 +14,8 @@ namespace Storage.Infrastructure.Entities
         public string Email { get; set; }
         public string Country { get; set; }
         public string PostIndex { get; set; }
+
+        //Navigation
+        public ToolEntity? Tool { get; set; }
     }
 }

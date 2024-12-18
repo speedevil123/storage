@@ -14,5 +14,7 @@ namespace Storage.Infrastructure.Entities
         //Navigation + ForeignKey
         public Guid CategoryId { get; set; }
         public CategoryEntity? Category { get; set; }
+
+        public ToolEntity? Tool { get; set; }
     }
 }

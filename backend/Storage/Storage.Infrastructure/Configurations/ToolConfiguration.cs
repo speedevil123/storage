@@ -19,21 +19,17 @@ namespace Storage.DataAccess.Configurations
         {
             builder.HasKey(t => t.Id);
 
-            builder.Property(t => t.Type)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(t => t.Model)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(t => t.Manufacturer)
-                .IsRequired()
-                .HasMaxLength(100);
-
             builder.Property(t => t.Quantity)
-                .IsRequired()
-                .HasDefaultValue(0);
+                .IsRequired();
+
+            builder.HasOne(t => t.Manufacturer)
+                .WithOne(m => m.Tool)
+                .HasForeignKey<ToolEntity>(t => t.ManufacturerId);
+
+            builder.HasOne(t => t.Model)
+                .WithOne(m => m.Tool)
+                .HasForeignKey<ToolEntity>(m => m.ModelId);
+        
         }
     }
 

@@ -22,5 +22,7 @@ namespace Storage.Core.Models
         //Navigation + ForeignKey
         public Guid CategoryId { get; }
         public Category? Category { get; }
+
+        public Tool? Tool { get; }
     }
 }

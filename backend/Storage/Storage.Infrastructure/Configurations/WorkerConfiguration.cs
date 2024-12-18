@@ -16,27 +16,23 @@ namespace Storage.Infrastructure.Configurations
             builder.HasKey(w => w.Id);
 
             builder.Property(w => w.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
             builder.Property(w => w.Position)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            builder.Property(w => w.Department)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
             builder.Property(w => w.Email)
-                .IsRequired()
-                .HasMaxLength(100);
+                .IsRequired();
 
-            builder.Property(w => w.Phone)
-                .IsRequired()
-                .HasMaxLength(20);
+            builder.Property(w => w.PhoneNumber)
+                .IsRequired();
 
             builder.Property(w => w.RegistrationDate)
                 .IsRequired();
+
+            builder.HasOne(w => w.Department)
+                .WithOne(d => d.Worker)
+                .HasForeignKey<WorkerEntity>(w => w.DepartmentId);
         }
     }
 

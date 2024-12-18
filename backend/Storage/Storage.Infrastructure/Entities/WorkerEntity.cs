@@ -10,17 +10,17 @@ namespace Storage.Infrastructure.Entities
     public class WorkerEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Position { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public DateTime RegistrationDate { get; set; } = new DateTime();
+        public string Name { get; set; }
+        public string Position { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public DateTime RegistrationDate { get; set; }
 
         //Navigation + ForeignKey
         public Guid DepartmentId { get; set; }
-        public Department? Department { get; set; }
+        public DepartmentEntity? Department { get; set; }
 
-        public List<Rental> Rentals { get; set; } = new List<Rental>();
+        public List<RentalEntity> Rentals { get; set; } = new List<RentalEntity>();
 
     }
 }
