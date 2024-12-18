@@ -10,19 +10,22 @@ namespace Storage.Core.Models
     {
         public Rental() { }
         public Rental(Guid workerId, Guid toolId, 
-            DateTime startDate, DateTime returnDate, string status)
+            DateTime startDate, DateTime returnDate, DateTime endDate, string status)
         {
             WorkerId = workerId;
             ToolId = toolId;
             StartDate = startDate;
             ReturnDate = returnDate;
+            EndDate = endDate;
             Status = status;
         }
         public DateTime StartDate { get; } = new DateTime();
         public DateTime ReturnDate { get; } = new DateTime();
         public DateTime EndDate { get; } = new DateTime();
-        public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)
 
+        //Если просрочен то триггером поставить статус просрочен и сгенерировать строку с Penalty
+        public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)
+        
         //Navigation + ForeignKey
         public Guid WorkerId { get; }
         public Guid ToolId { get; }

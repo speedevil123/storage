@@ -11,13 +11,16 @@ namespace Storage.Infrastructure.Entities
     {
         public DateTime StartDate { get; set; } = new DateTime();
         public DateTime ReturnDate { get; set; } = new DateTime();
-        public string Status { get; set; } = string.Empty; // Статус (активен, завершен)
+        public DateTime EndDate { get; set; } = new DateTime();
 
-        //Navigation Properties-ForeignKeys
+        //Если просрочен то триггером поставить статус просрочен и сгенерировать строку с Penalty
+        public string Status { get; set; } = string.Empty; // Статус (активен, завершен, просрочен)
+
+        //Navigation + ForeignKey
         public Guid WorkerId { get; set; }
         public Guid ToolId { get; set; }
 
-        public virtual WorkerEntity? Worker { get; set; }
-        public virtual ToolEntity? Tool { get; set; }
+        public WorkerEntity? Worker { get; set; }
+        public ToolEntity? Tool { get; set; }
     }
 }

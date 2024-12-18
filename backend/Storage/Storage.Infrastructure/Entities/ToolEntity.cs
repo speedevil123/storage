@@ -10,10 +10,14 @@ namespace Storage.Infrastructure.Entities
     public class ToolEntity
     {
         public Guid Id { get; set; }
-        public string Type { get; set; } = string.Empty;
-        public string Model { get; set; } = string.Empty;
-        public string Manufacturer { get; set; } = string.Empty;
         public int Quantity { get; set; } = 0;
-        public List<RentalEntity> Rentals { get; } = new List<RentalEntity>();
+
+        //Navigation + ForeignKey
+        public Guid ModelId { get; set; }
+        public Guid ManufacturerId { get; set; }
+        public Model? Model { get; set; }
+        public Manufacturer? Manufacturer { get; set;}
+
+        public List<Rental> Rentals { get; set; } = new List<Rental>();
     }
 }
