@@ -8,7 +8,6 @@ namespace Storage.Application.Services
         Task<Guid> CreateTool(Tool tool);
         Task<Guid> DeleteTool(Guid id);
         Task<List<Tool>> GetAllTools();
-        Task<Guid> UpdateTool(Guid id, string type, string model, string manufacturer, 
-            int quantity);
+        Task<Guid> UpdateTool(Guid id, int Quantity, Guid modelId, Guid manufacturerId);
     }
 }

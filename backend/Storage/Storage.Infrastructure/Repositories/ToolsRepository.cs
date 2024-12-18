@@ -108,7 +108,7 @@ namespace Storage.DataAccess.Repositories
             return id;
         }
 
-        private Tool MapToDomain(ToolEntity entity)
+        public static Tool MapToDomain(ToolEntity entity)
         {
             if(entity == null)
             {

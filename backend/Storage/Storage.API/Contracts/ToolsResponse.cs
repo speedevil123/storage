@@ -2,8 +2,9 @@
 {
     public record ToolsResponse(
         Guid Id,
-        string Type,
-        string Model,
-        string Manufacturer,
-        int Quantity);
+        Guid ModelId,
+        Guid ManufacturerId,
+        int Quantity,
+        string ModelName,
+        string ManufacturerName);
 }

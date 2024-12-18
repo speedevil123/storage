@@ -12,8 +12,10 @@ namespace Storage.Infrastructure.Entities
         public double Fine { get; set; }
         public DateTime PenaltyDate { get; set; }
 
-        //Navigation + ForeignKey
-        public Guid RentalId { get; set; }
+        public Guid ToolId { get; set; }
+        public Guid WorkerId { get; set; }
+
+        //Navigation 
         public RentalEntity? Rental { get; set; }
     }
 }

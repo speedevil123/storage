@@ -103,7 +103,7 @@ namespace Storage.Infrastructure.Repositories
             return id;
         }
 
-        private Worker MapToDomain(WorkerEntity entity)
+        public static Worker MapToDomain(WorkerEntity entity)
         {
             if(entity == null)
             {

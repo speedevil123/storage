@@ -8,9 +8,8 @@ namespace Storage.Core.Models
 {
     public class Rental
     {
-        public Rental() { }
         public Rental(Guid workerId, Guid toolId, 
-            DateTime startDate, DateTime returnDate, DateTime endDate, string status)
+            DateTime startDate, DateTime returnDate, DateTime endDate, string status, Worker worker, Tool tool)
         {
             WorkerId = workerId;
             ToolId = toolId;
@@ -18,6 +17,8 @@ namespace Storage.Core.Models
             ReturnDate = returnDate;
             EndDate = endDate;
             Status = status;
+            Worker = worker;
+            Tool = tool;
         }
         public DateTime StartDate { get; } = new DateTime();
         public DateTime ReturnDate { get; } = new DateTime();

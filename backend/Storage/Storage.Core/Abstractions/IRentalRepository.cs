@@ -13,6 +13,6 @@ namespace Storage.Core.Abstractions
         Task<Guid> Delete(Guid workerId, Guid toolId);
         Task<List<Rental>> Get();
         Task<Guid> Update(Guid workerId, Guid toolId,
-            DateTime startDate, DateTime returnDate,string status);
+            DateTime startDate, DateTime returnDate, DateTime endDate, string status);
     }
 }
