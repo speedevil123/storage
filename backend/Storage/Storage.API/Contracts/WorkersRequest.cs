@@ -4,9 +4,9 @@
         Guid Id,
         string Name,
         string Position,
-        string Department,
         string Email,
-        string Phone,
-        DateTime RegistrationDate
-        );
+        string PhoneNumber,
+        DateTime RegistrationDate,
+        Guid DepartmentId,
+        string DepartmentName);
 }

@@ -22,10 +22,12 @@ namespace Storage.Controllers
             var tools = await _toolsService.GetAllTools();
 
             var response = tools.Select(t => new ToolsResponse(
-                t.Id, 
+                t.Id,
+                t.Model.Category.Id,
                 t.ModelId, 
                 t.ManufacturerId, 
                 t.Quantity, 
+                t.Model.Category.Name,
                 t.Model.Name, 
                 t.Manufacturer.Name));
 
