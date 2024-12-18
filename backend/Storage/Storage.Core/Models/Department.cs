@@ -17,10 +17,10 @@ namespace Storage.Core.Models
             Address = address;
         }
 
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Address { get; set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public string PhoneNumber { get; }
+        public string Email { get; }
+        public string Address { get; }
     }
 }

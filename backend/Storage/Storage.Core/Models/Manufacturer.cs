@@ -18,11 +18,11 @@ namespace Storage.Core.Models
             PostIndex = postIndex;
         }
 
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Country { get; set; }
-        public string PostIndex { get; set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public string PhoneNumber { get; }
+        public string Email { get; }
+        public string Country { get; }
+        public string PostIndex { get; }
     }
 }

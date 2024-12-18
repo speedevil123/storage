@@ -22,8 +22,8 @@ namespace Storage.Core.Models
         public DateTime ReturnDate { get; } = new DateTime();
         public DateTime EndDate { get; } = new DateTime();
         public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)
-        
-        //Navigation Properties-ForeignKeys
+
+        //Navigation + ForeignKey
         public Guid WorkerId { get; }
         public Guid ToolId { get; }
 

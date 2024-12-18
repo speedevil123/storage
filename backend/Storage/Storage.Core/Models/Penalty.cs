@@ -8,11 +8,20 @@ namespace Storage.Core.Models
 {
     public class Penalty
     {
-        public Guid Id { get; set; }
-        public double Fine { get; set; }
-        public DateTime PenaltyDate { get; set; }
+        public Penalty(Guid id, double fine, DateTime penaltyDate, Guid rentalId, Rental rental)
+        {
+            Id = id;
+            Fine = fine;
+            PenaltyDate = penaltyDate;
+            RentalId = rentalId;
+            Rental = rental;
+        }
+
+        public Guid Id { get; }
+        public double Fine { get; }
+        public DateTime PenaltyDate { get; }
         //Navigation + ForeignKey
-        public Guid RentalId { get; set; }
-        public Rental Rental { get; set; }
+        public Guid RentalId { get; }
+        public Rental Rental { get; }
     }
 }
