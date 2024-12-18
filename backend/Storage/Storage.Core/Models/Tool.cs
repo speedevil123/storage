@@ -8,12 +8,15 @@ namespace Storage.Core.Models
 {
     public class Tool
     {
-        public Tool(Guid id, Guid modelId, Guid manufacturerId, int quantity)
+        public Tool(Guid id, Guid modelId, Guid manufacturerId,
+            int quantity, Model model, Manufacturer manufacturer)
         {
             Id = id;
             ModelId = modelId;
             ManufacturerId = manufacturerId;
             Quantity = quantity;
+            Model = model;
+            Manufacturer = manufacturer;
         }
         public Guid Id { get; }
         public int Quantity { get; } = 0;

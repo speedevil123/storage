@@ -9,11 +9,11 @@ namespace Storage.Infrastructure.Entities
     public class ManufacturerEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
-        public string Country { get; set; }
-        public string PostIndex { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Country { get; set; } = string.Empty;
+        public string PostIndex { get; set; } = string.Empty;
 
         //Navigation
         public ToolEntity? Tool { get; set; }

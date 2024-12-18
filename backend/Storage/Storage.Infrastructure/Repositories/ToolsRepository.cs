@@ -1,88 +1,158 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using Storage.Core.Models;
-//using Storage.Infrastructure.Entities;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Storage.Core.Models;
+using Storage.Infrastructure.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-//namespace Storage.DataAccess.Repositories
-//{
-//    public class ToolsRepository : IToolsRepository
-//    {
-//        private readonly StorageDbContext _context;
-//        public ToolsRepository(StorageDbContext context)
-//        {
-//            _context = context;
-//        }
+namespace Storage.DataAccess.Repositories
+{
+    public class ToolsRepository : IToolsRepository
+    {
+        private readonly StorageDbContext _context;
+        public ToolsRepository(StorageDbContext context)
+        {
+            _context = context;
+        }
 
-//        public async Task<Guid> Create(Tool tool)
-//        {
-//            var toolEntity = new ToolEntity
-//            {
-//                Id = tool.Id,
-//                Type = tool.Type,
-//                Model = tool.Model,
-//                Manufacturer = tool.Manufacturer,
-//                Quantity = tool.Quantity
-//            };
+        public async Task<Guid> Create(Tool tool)
+        {
+            var model = await _context.Models.FirstOrDefaultAsync(m => m.Id == tool.Id);
+            var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == tool.ManufacturerId);
 
-//            await _context.Tools.AddAsync(toolEntity);
-//            await _context.SaveChangesAsync();
+            if (model == null)
+            {
+                throw new KeyNotFoundException($"ModelEntity with id {tool.ModelId} not found");
+            }
+  
+            if (manufacturer == null)
+            {
+                throw new KeyNotFoundException($"ManufacturerEntity with id {tool.ManufacturerId} not found");
+            }
 
-//            return toolEntity.Id;
-//        }
+            var toolEntity = new ToolEntity
+            {
+                Id = tool.Id,
+                ModelId = tool.ModelId,
+                ManufacturerId = tool.ManufacturerId,
+                Quantity = tool.Quantity,
+                Model = model,
+                Manufacturer = manufacturer
+            };
 
-//        public async Task<Guid> Delete(Guid id)
-//        {
-//            var toolExists = await _context.Tools
-//                .AnyAsync(w => w.Id == id);
+            await _context.Tools.AddAsync(toolEntity);
+            await _context.SaveChangesAsync();
 
-//            if (!toolExists)
-//            {
-//                throw new KeyNotFoundException("ToolEntity not found");
-//            }
+            return toolEntity.Id;
+        }
 
-//            await _context.Tools
-//                .Where(t => t.Id == id)
-//                .ExecuteDeleteAsync();
+        public async Task<Guid> Delete(Guid id)
+        {
+            var toolExists = await _context.Tools
+                .AnyAsync(w => w.Id == id);
 
-//            return id;
-//        }
+            if (!toolExists)
+            {
+                throw new KeyNotFoundException("ToolEntity not found");
+            }
 
-//        public async Task<List<Tool>> Get()
-//        {
-//            var toolEntities = await _context.Tools
-//                .AsNoTracking()
-//                .ToListAsync();
+            await _context.Tools
+                .Where(t => t.Id == id)
+                .ExecuteDeleteAsync();
 
-//            var tools = toolEntities
-//                .Select(t => new Tool(t.Id, t.Type, t.Model, t.Manufacturer, t.Quantity))
-//                .ToList();
+            return id;
+        }
 
-//            return tools;
-//        }
+        public async Task<List<Tool>> Get()
+        {
+            var toolEntities = await _context.Tools
+                .Include(t => t.Model)
+                    .ThenInclude(m => m.Category)
+                .Include(t => t.Manufacturer)
+                .AsNoTracking()
+                .ToListAsync();
 
-//        public async Task<Guid> Update(Guid id, string type, string model, string manufacturer, int quantity)
-//        {
-//            var toolExists = await _context.Tools
-//                .AnyAsync(w => w.Id == id);
+            return toolEntities.Select(MapToDomain).ToList();
+        }
 
-//            if (!toolExists)
-//            {
-//                throw new KeyNotFoundException("ToolEntity not found");
-//            }
+        public async Task<Guid> Update(Guid id, int Quantity, Guid modelId, Guid manufacturerId)
+        {
+            var model = await _context.Models.FirstOrDefaultAsync(m => m.Id == modelId);
+            var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == manufacturerId);
+            var toolToUpdate = await _context.Tools.FirstOrDefaultAsync(t => t.Id == id);
 
-//            await _context.Tools
-//                .Where(t => t.Id == id)
-//                .ExecuteUpdateAsync(s => s
-//                    .SetProperty(t => t.Type, t => type)
-//                    .SetProperty(t => t.Model, t => model)
-//                    .SetProperty(t => t.Manufacturer, t => manufacturer)
-//                    .SetProperty(t => t.Quantity, t => quantity));
+            if (model == null)
+            {
+                throw new KeyNotFoundException($"ModelEntity with id {modelId} not found");
+            }
 
-//            return id;
-//        }
-//    }
-//}
+            if (manufacturer == null)
+            {
+                throw new KeyNotFoundException($"ManufacturerEntity with id {manufacturerId} not found");
+            }
+
+            if (toolToUpdate == null)
+            {
+                throw new KeyNotFoundException($"ToolEntity with id {id} not found");
+            }
+
+            toolToUpdate.Quantity = Quantity;
+            toolToUpdate.ModelId = modelId;
+            toolToUpdate.ManufacturerId = manufacturerId;
+            toolToUpdate.Model = model;
+            toolToUpdate.Manufacturer = manufacturer;
+
+            await _context.SaveChangesAsync();
+            return id;
+        }
+
+        private Tool MapToDomain(ToolEntity entity)
+        {
+            if(entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            Category? category = null;
+            if(entity.Model?.Category != null)
+            {
+                category = new Category(
+                    entity.Model.Category.Id,
+                    entity.Model.Category.Name);
+            }
+
+            Model? model = null;
+            
+            if(entity.Model != null)
+            {
+                model = new Model(
+                    entity.Model.Id,
+                    entity.Model.Name,
+                    entity.Model.CategoryId,
+                    category);
+            }
+
+            Manufacturer? manufacturer = null;
+            if(entity.Manufacturer != null)
+            {
+                manufacturer = new Manufacturer(
+                    entity.Manufacturer.Id,
+                    entity.Manufacturer.Name,
+                    entity.Manufacturer.PhoneNumber,
+                    entity.Manufacturer.Email,
+                    entity.Manufacturer.Country,
+                    entity.Manufacturer.PostIndex);
+            }
+
+            return new Tool(
+                entity.Id,
+                entity.ModelId,
+                entity.ManufacturerId,
+                entity.Quantity,
+                model,
+                manufacturer);
+        }
+    }
+}

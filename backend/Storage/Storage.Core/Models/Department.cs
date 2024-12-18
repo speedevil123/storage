@@ -8,7 +8,7 @@ namespace Storage.Core.Models
 {
     public class Department
     {
-        public Department(Guid id, string name, string phoneNumber, string email, string address, string postIndex)
+        public Department(Guid id, string name, string phoneNumber, string email, string address)
         {
             Id = id;
             Name = name;

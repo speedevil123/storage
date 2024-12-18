@@ -9,7 +9,7 @@ namespace Storage.Infrastructure.Entities
     public class ModelEntity
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         
         //Navigation + ForeignKey
         public Guid CategoryId { get; set; }

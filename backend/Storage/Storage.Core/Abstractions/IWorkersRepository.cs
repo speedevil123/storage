@@ -12,7 +12,7 @@ namespace Storage.Core.Abstractions
         Task<Guid> Create(Worker worker);
         Task<Guid> Delete(Guid id);
         Task<List<Worker>> Get();
-        Task<Guid> Update(Guid id, string name, string position,
-            string department, string email, string phone, DateTime registrationDate);
+        Task<Guid> Update(Guid id, string name, string position, string email,
+            string phoneNumber, DateTime registrationDate, Guid departmentId);
     }
 }
