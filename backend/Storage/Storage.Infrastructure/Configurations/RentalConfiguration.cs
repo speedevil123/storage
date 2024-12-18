@@ -29,6 +29,9 @@ namespace Storage.Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(r => r.ToolQuantity)
+                .IsRequired();
+
             builder.HasOne(r => r.Worker)
                 .WithMany(w => w.Rentals)
                 .HasForeignKey(r => r.WorkerId);

@@ -45,6 +45,7 @@ namespace Storage.Infrastructure.Repositories
                 ReturnDate = rental.ReturnDate,
                 EndDate = rental.EndDate,
                 Status = rental.Status,
+                ToolQuantity = rental.ToolQuantity,
 
                 //Navigation Properties
                 Worker = worker,
@@ -90,7 +91,7 @@ namespace Storage.Infrastructure.Repositories
         }
 
         public async Task<Guid> Update(Guid workerId, Guid toolId,
-            DateTime startDate, DateTime returnDate, DateTime endDate, string status)
+            DateTime startDate, DateTime returnDate, DateTime endDate, string status, int toolQuantity)
         {
             var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerId);
             var tool = await _context.Tools.FirstOrDefaultAsync(t => t.Id == toolId);
@@ -118,6 +119,7 @@ namespace Storage.Infrastructure.Repositories
             rentalToUpdate.ReturnDate = returnDate;
             rentalToUpdate.EndDate = endDate;
             rentalToUpdate.Status = status;
+            rentalToUpdate.ToolQuantity = toolQuantity;
 
             await _context.SaveChangesAsync();
 
@@ -142,7 +144,8 @@ namespace Storage.Infrastructure.Repositories
                 entity.EndDate,
                 entity.Status,
                 worker,
-                tool);
+                tool,
+                entity.ToolQuantity);
         }
     }
 }

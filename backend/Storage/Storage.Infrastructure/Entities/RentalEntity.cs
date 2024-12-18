@@ -15,6 +15,7 @@ namespace Storage.Infrastructure.Entities
 
         //Если просрочен то триггером поставить статус просрочен и сгенерировать строку с Penalty
         public string Status { get; set; } = string.Empty; // Статус (активен, завершен, просрочен)
+        public int ToolQuantity { get; set; }
 
         //Navigation + ForeignKey
         public Guid WorkerId { get; set; }
