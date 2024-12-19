@@ -26,6 +26,6 @@ namespace Storage.Core.Models
         public string PostIndex { get; }
 
         //Navigation
-        public Tool? Tool { get; }
+        public List<Tool> Tools { get; } = new List<Tool>();
     }
 }

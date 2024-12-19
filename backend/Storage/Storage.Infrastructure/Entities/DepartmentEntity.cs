@@ -15,6 +15,6 @@ namespace Storage.Infrastructure.Entities
         public string Address { get; set; }
 
         //Navigation
-        public WorkerEntity Worker { get; set; }
+        public List<WorkerEntity> Workers { get; set; } = new List<WorkerEntity>();
     }
 }

@@ -9,17 +9,17 @@ namespace Storage.API.Controllers
     [Route("[controller]")]
     public class RentalsController : ControllerBase
     {
-        private readonly IRentalService _rentalService;
+        private readonly IRentalsService _RentalsService;
 
-        public RentalsController(IRentalService rentalService)
+        public RentalsController(IRentalsService RentalsService)
         {
-            _rentalService = rentalService;
+            _RentalsService = RentalsService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<RentalsResponse>>> GetRentals()
         {
-            var rentals = await _rentalService
+            var rentals = await _RentalsService
                 .GetAllRentals();
 
             var response = rentals
@@ -43,22 +43,22 @@ namespace Storage.API.Controllers
             var rental = new Rental(
                 request.WorkerId, 
                 request.ToolId, 
-                request.StartDate, 
+                DateTime.Now, 
                 request.ReturnDate, 
                 request.EndDate, 
-                request.Status, 
+                "Активен", 
                 null,
                 null,
                 request.ToolQuantity);
 
-            var rentalToolId = await _rentalService.CreateRental(rental);
+            var rentalToolId = await _RentalsService.CreateRental(rental);
             return Ok(rentalToolId);
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<Guid>> UpdateRental(Guid workerId, Guid toolId, [FromBody] RentalsRequest request)
         {
-            var rentalToolId = await _rentalService
+            var rentalToolId = await _RentalsService
                 .UpdateRental(request.WorkerId, request.ToolId, request.StartDate, request.ReturnDate,
                 request.EndDate, request.Status, request.ToolQuantity);
 
@@ -68,7 +68,7 @@ namespace Storage.API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<Guid>> DeleteRental(Guid workerId, Guid toolId)
         {
-            var rentalToolId = await _rentalService.DeleteRental(workerId, toolId);
+            var rentalToolId = await _RentalsService.DeleteRental(workerId, toolId);
             return Ok(rentalToolId);
         }
     }

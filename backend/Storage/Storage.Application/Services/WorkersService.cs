@@ -10,32 +10,32 @@ namespace Storage.Application.Services
 {
     public class WorkersService : IWorkersService
     {
-        private readonly IWorkersRepository _workerRepository;
+        private readonly IWorkersRepository _WorkersRepository;
 
-        public WorkersService(IWorkersRepository workerRepository)
+        public WorkersService(IWorkersRepository WorkersRepository)
         {
-            _workerRepository = workerRepository;
+            _WorkersRepository = WorkersRepository;
         }
 
         public async Task<Guid> CreateWorker(Worker worker)
         {
-            return await _workerRepository.Create(worker);
+            return await _WorkersRepository.Create(worker);
         }
 
         public async Task<Guid> DeleteWorker(Guid id)
         {
-            return await _workerRepository.Delete(id);
+            return await _WorkersRepository.Delete(id);
         }
 
         public async Task<List<Worker>> GetAllWorkers()
         {
-            return await _workerRepository.Get();
+            return await _WorkersRepository.Get();
         }
 
         public async Task<Guid> UpdateWorker(Guid id, string name, string position, string email,
             string phoneNumber, DateTime registrationDate, Guid departmentId)
         {
-            return await _workerRepository.Update(id, name, position, email, phoneNumber, registrationDate, departmentId);
+            return await _WorkersRepository.Update(id, name, position, email, phoneNumber, registrationDate, departmentId);
         }
     }
 }

@@ -131,7 +131,8 @@ namespace Storage.Infrastructure.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    ToolQuantity = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,20 +190,17 @@ namespace Storage.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Tools_ManufacturerId",
                 table: "Tools",
-                column: "ManufacturerId",
-                unique: true);
+                column: "ManufacturerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tools_ModelId",
                 table: "Tools",
-                column: "ModelId",
-                unique: true);
+                column: "ModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workers_DepartmentId",
                 table: "Workers",
-                column: "DepartmentId",
-                unique: true);
+                column: "DepartmentId");
         }
 
         /// <inheritdoc />

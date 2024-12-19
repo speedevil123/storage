@@ -24,6 +24,6 @@ namespace Storage.Core.Models
         public string Address { get; }
 
         //Navigation
-        public Worker Worker { get; }
+        public List<Worker> Workers { get; } = new List<Worker>();
     }
 }

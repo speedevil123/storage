@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace Storage.Infrastructure.Repositories
 {
-    public class RentalRepository : IRentalRepository
+    public class RentalsRepository : IRentalsRepository
     {
         private readonly StorageDbContext _context;
 
-        public RentalRepository(StorageDbContext context)
+        public RentalsRepository(StorageDbContext context)
         {
             _context = context;
         }
@@ -80,7 +80,12 @@ namespace Storage.Infrastructure.Repositories
         {
             var rentalEntities = await _context.Rentals
                 .Include(r => r.Worker)
+                    .ThenInclude(w => w.Department)
                 .Include(r => r.Tool)
+                    .ThenInclude(t => t.Model)
+                    .ThenInclude(m => m.Category)
+                .Include(r => r.Tool)
+                    .ThenInclude(t => t.Manufacturer)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -133,7 +138,7 @@ namespace Storage.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            Worker worker = WorkerRepository.MapToDomain(entity.Worker);
+            Worker worker = WorkersRepository.MapToDomain(entity.Worker);
             Tool tool = ToolsRepository.MapToDomain(entity.Tool);
 
             return new Rental(

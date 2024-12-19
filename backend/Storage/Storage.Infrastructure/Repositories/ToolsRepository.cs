@@ -19,33 +19,43 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<Guid> Create(Tool tool)
         {
-            var model = await _context.Models.FirstOrDefaultAsync(m => m.Id == tool.Id);
+            var model = await _context.Models.Include(m => m.Category).FirstOrDefaultAsync(m => m.Id == tool.ModelId);
             var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == tool.ManufacturerId);
+
+            var toolExists = await _context.Tools
+                .FirstOrDefaultAsync(t => t.ModelId == tool.ModelId && t.ManufacturerId == tool.ManufacturerId);
 
             if (model == null)
             {
                 throw new KeyNotFoundException($"ModelEntity with id {tool.ModelId} not found");
             }
-  
             if (manufacturer == null)
             {
                 throw new KeyNotFoundException($"ManufacturerEntity with id {tool.ManufacturerId} not found");
             }
-
-            var toolEntity = new ToolEntity
+            
+            if(toolExists == null)
             {
-                Id = tool.Id,
-                ModelId = tool.ModelId,
-                ManufacturerId = tool.ManufacturerId,
-                Quantity = tool.Quantity,
-                Model = model,
-                Manufacturer = manufacturer
-            };
+                var toolEntity = new ToolEntity
+                {
+                    Id = tool.Id,
+                    ModelId = tool.ModelId,
+                    ManufacturerId = tool.ManufacturerId,
+                    Quantity = tool.Quantity,
+                    Model = model,
+                    Manufacturer = manufacturer
+                };
 
-            await _context.Tools.AddAsync(toolEntity);
+                await _context.Tools.AddAsync(toolEntity);
+                await _context.SaveChangesAsync();
+                return toolEntity.Id;
+            }
+
+            toolExists.Quantity += tool.Quantity;
+
             await _context.SaveChangesAsync();
 
-            return toolEntity.Id;
+            return toolExists.Id;
         }
 
         public async Task<Guid> Delete(Guid id)

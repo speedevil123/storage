@@ -12,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace Storage.Infrastructure.Repositories
 {
-    public class WorkerRepository : IWorkersRepository
+    public class WorkersRepository : IWorkersRepository
     {
         private readonly StorageDbContext _context;
-        public WorkerRepository(StorageDbContext context)
+        public WorkersRepository(StorageDbContext context)
         {
             _context = context;
         }

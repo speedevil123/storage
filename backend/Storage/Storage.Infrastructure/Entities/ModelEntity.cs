@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Storage.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,6 @@ namespace Storage.Infrastructure.Entities
         public Guid CategoryId { get; set; }
         public CategoryEntity? Category { get; set; }
 
-        public ToolEntity? Tool { get; set; }
+        public List<ToolEntity> Tools { get; } = new List<ToolEntity>();
     }
 }

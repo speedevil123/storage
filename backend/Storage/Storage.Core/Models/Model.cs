@@ -23,6 +23,6 @@ namespace Storage.Core.Models
         public Guid CategoryId { get; }
         public Category? Category { get; }
 
-        public Tool? Tool { get; }
+        public List<Tool> Tools { get; } = new List<Tool>();
     }
 }

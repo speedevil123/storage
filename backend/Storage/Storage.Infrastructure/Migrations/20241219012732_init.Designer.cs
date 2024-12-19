@@ -12,7 +12,7 @@ using Storage.DataAccess;
 namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageDbContext))]
-    [Migration("20241218081312_init")]
+    [Migration("20241219012732_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -167,6 +167,9 @@ namespace Storage.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("ToolQuantity")
+                        .HasColumnType("int");
+
                     b.HasKey("WorkerId", "ToolId");
 
                     b.HasIndex("ToolId");
@@ -191,11 +194,9 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ManufacturerId")
-                        .IsUnique();
+                    b.HasIndex("ManufacturerId");
 
-                    b.HasIndex("ModelId")
-                        .IsUnique();
+                    b.HasIndex("ModelId");
 
                     b.ToTable("Tools");
                 });
@@ -230,8 +231,7 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId")
-                        .IsUnique();
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Workers");
                 });
@@ -280,14 +280,14 @@ namespace Storage.Infrastructure.Migrations
             modelBuilder.Entity("Storage.Infrastructure.Entities.ToolEntity", b =>
                 {
                     b.HasOne("Storage.Infrastructure.Entities.ManufacturerEntity", "Manufacturer")
-                        .WithOne("Tool")
-                        .HasForeignKey("Storage.Infrastructure.Entities.ToolEntity", "ManufacturerId")
+                        .WithMany("Tools")
+                        .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Storage.Infrastructure.Entities.ModelEntity", "Model")
-                        .WithOne("Tool")
-                        .HasForeignKey("Storage.Infrastructure.Entities.ToolEntity", "ModelId")
+                        .WithMany("Tools")
+                        .HasForeignKey("ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -299,8 +299,8 @@ namespace Storage.Infrastructure.Migrations
             modelBuilder.Entity("Storage.Infrastructure.Entities.WorkerEntity", b =>
                 {
                     b.HasOne("Storage.Infrastructure.Entities.DepartmentEntity", "Department")
-                        .WithOne("Worker")
-                        .HasForeignKey("Storage.Infrastructure.Entities.WorkerEntity", "DepartmentId")
+                        .WithMany("Workers")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -314,18 +314,17 @@ namespace Storage.Infrastructure.Migrations
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.DepartmentEntity", b =>
                 {
-                    b.Navigation("Worker")
-                        .IsRequired();
+                    b.Navigation("Workers");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.ManufacturerEntity", b =>
                 {
-                    b.Navigation("Tool");
+                    b.Navigation("Tools");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.ModelEntity", b =>
                 {
-                    b.Navigation("Tool");
+                    b.Navigation("Tools");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.RentalEntity", b =>

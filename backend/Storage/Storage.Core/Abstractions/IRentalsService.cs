@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Abstractions
 {
-    public interface IRentalRepository
+    public interface IRentalsService
     {
-        Task<Guid> Create(Rental rental);
-        Task<Guid> Delete(Guid workerId, Guid toolId);
-        Task<List<Rental>> Get();
-        Task<Guid> Update(Guid workerId, Guid toolId,
+        Task<Guid> CreateRental(Rental rental);
+        Task<Guid> DeleteRental(Guid workerId, Guid toolId);
+        Task<List<Rental>> GetAllRentals();
+        Task<Guid> UpdateRental(Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, DateTime endDate, string status, int toolQuantity);
     }
 }

@@ -31,8 +31,8 @@ namespace Storage.Infrastructure.Configurations
                 .IsRequired();
 
             builder.HasOne(w => w.Department)
-                .WithOne(d => d.Worker)
-                .HasForeignKey<WorkerEntity>(w => w.DepartmentId);
+                .WithMany(d => d.Workers)
+                .HasForeignKey(w => w.DepartmentId);
         }
     }
 

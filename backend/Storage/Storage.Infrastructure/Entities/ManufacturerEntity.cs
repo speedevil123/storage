@@ -16,6 +16,6 @@ namespace Storage.Infrastructure.Entities
         public string PostIndex { get; set; } = string.Empty;
 
         //Navigation
-        public ToolEntity? Tool { get; set; }
+        public List<ToolEntity> Tools { get; } = new List<ToolEntity>();
     }
 }

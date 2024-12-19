@@ -23,12 +23,12 @@ namespace Storage.DataAccess.Configurations
                 .IsRequired();
 
             builder.HasOne(t => t.Manufacturer)
-                .WithOne(m => m.Tool)
-                .HasForeignKey<ToolEntity>(t => t.ManufacturerId);
+                .WithMany(m => m.Tools)
+                .HasForeignKey(t => t.ManufacturerId);
 
             builder.HasOne(t => t.Model)
-                .WithOne(m => m.Tool)
-                .HasForeignKey<ToolEntity>(m => m.ModelId);
+                .WithMany(m => m.Tools)
+                .HasForeignKey(m => m.ModelId);
         
         }
     }
