@@ -25,9 +25,18 @@
     margin-right: 1rem;
 }
 
+.nav-links {
+    font-size: 20px;
+}
+
+.rental-link {
+    font-weight: 700;
+}
+
 .navbar-center .nav-links a {
     color: #fff;
     text-decoration: none;
+    padding: 10px;
 }
 
 .navbar-right {

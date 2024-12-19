@@ -6,22 +6,26 @@ const Navbar = () => {
         <nav className="navbar">
             <div className="navbar-left">
                 <a href="/" className="logo">
-                    ShopNow
+                    ToolBox
                 </a>
             </div>
             <div className="navbar-center">
                 <ul className="nav-links">
                     <li>
-                        <a href="/products">Products</a>
+                        <a href="/Contacts">Контакты</a>
                     </li>
                     <li>
-                        <a href="/products">Products</a>
+                        <a href="/Help">Помощь</a>
                     </li>
                     <li>
-                        <a href="/products">Products</a>
+                        <a className="rental-link" href="/Rental">Аренда</a>
+                    </li>
+                    <li>
+                        <a href="/Statistics">Статистика</a>
                     </li>
                 </ul>
             </div>
+            {/* Здесь будет про отчеты */}
             <div className="navbar-right">
                 <a href="/cart" className="cart-icon">
                     <i className="fas fa-shopping-cart"></i>

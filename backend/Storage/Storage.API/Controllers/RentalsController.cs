@@ -2,6 +2,7 @@
 using Storage.API.Contracts;
 using Storage.Core.Abstractions;
 using Storage.Core.Models;
+using System.Linq;
 
 namespace Storage.API.Controllers
 {
@@ -22,15 +23,14 @@ namespace Storage.API.Controllers
             var rentals = await _RentalsService
                 .GetAllRentals();
 
-            var response = rentals
-                .Select(r => new RentalsResponse(
+            var response = rentals.Select(r => new RentalsResponse(
                     r.WorkerId,
                     r.ToolId,
                     r.Worker.Name,
                     r.Tool.Model.Category.Name + " " + r.Tool.Model.Name,
-                    r.StartDate,
-                    r.ReturnDate,
-                    r.EndDate,
+                    r.StartDate.ToString("g"),
+                    r.ReturnDate.ToString("g"),
+                    r.EndDate.ToString("g"),
                     r.Status,
                     r.ToolQuantity));
 

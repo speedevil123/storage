@@ -5,9 +5,9 @@
         Guid ToolId,
         string WorkerName,
         string ToolName,
-        DateTime StartDate,
-        DateTime ReturnDate,
-        DateTime EndDate,
+        string StartDate,
+        string ReturnDate,
+        string EndDate,
         string Status,
         int ToolQuantity);
 }
