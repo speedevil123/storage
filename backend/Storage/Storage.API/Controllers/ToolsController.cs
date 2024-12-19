@@ -44,6 +44,7 @@ namespace Storage.Controllers
                 request.Quantity,
                 null,
                 null);
+
             var toolId = await _toolsService.CreateTool(tool);
             return Ok(toolId);
         }
