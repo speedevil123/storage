@@ -19,6 +19,7 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<Guid> Create(Tool tool)
         {
+            //Вложенные include?
             var model = await _context.Models.Include(m => m.Category).FirstOrDefaultAsync(m => m.Id == tool.ModelId);
             var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == tool.ManufacturerId);
 
@@ -89,7 +90,7 @@ namespace Storage.DataAccess.Repositories
 
         public async Task<Guid> Update(Guid id, int Quantity, Guid modelId, Guid manufacturerId)
         {
-            var model = await _context.Models.FirstOrDefaultAsync(m => m.Id == modelId);
+            var model = await _context.Models.Include(m => m.Category).FirstOrDefaultAsync(m => m.Id == modelId);
             var manufacturer = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == manufacturerId);
             var toolToUpdate = await _context.Tools.FirstOrDefaultAsync(t => t.Id == id);
 

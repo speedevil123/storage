@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Storage.Core.Abstractions
 {
-    public interface ICategoriesRepository
+    public interface IDepartmentsRepository
     {
-        Task<Guid> Create(Category category);
+        Task<Guid> Create(Department department);
         Task<Guid> Delete(Guid id);
-        Task<List<Category>> Get();
-        Task<Guid> Update(Guid id, string name);
+        Task<List<Department>> Get();
+        Task<Guid> Update(Guid id, string name, string phoneNumber, string email, string address);
     }
 }
