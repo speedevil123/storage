@@ -61,7 +61,7 @@ const RentalTable = () => {
         try {
             const rentalsData = await GETRequest('/Rentals');
             const rentalRows = rentalsData.map((rental) => ({
-                key: rental.id,
+                key: rental.workerId + " " + rental.ToolId,
                 workerName: rental.workerName,
                 workerId: rental.workerId,
                 toolName: rental.toolName,
@@ -119,14 +119,14 @@ const RentalTable = () => {
         {
             title: '№',
             key: 'index',
-            width: 50, // Фиксированная ширина для индекса
+            width: 50,
             render: (text, record, index) => index + 1,
         },
         {
             title: 'Имя Работника',
             dataIndex: 'workerName',
             key: 'workerName',
-            width: 200, // Достаточно места для отображения имени
+            width: 200, 
             render: (text, record) => (
                 <AutoComplete
                     value={record.workerName || ''}

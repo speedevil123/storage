@@ -11,7 +11,10 @@ const App = () => {
         <Router>
             <Navbar />
             <Routes>
-                <Route path="/Rental" element={<RentalTable />} />
+                  <Route path="/Rental" element={
+                    <div style={{ margin: '50px 200px' }}>
+                        <RentalTable />
+                    </div>} />
                 {/* <Route path="/Contacts" element={<Contacts />} />
                 <Route path="/Help" element={<Help />} />
                 <Route path="/Statistics" element={<Statistics />} /> */}
