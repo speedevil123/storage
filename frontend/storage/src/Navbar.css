@@ -21,6 +21,19 @@
     padding: 0;
 }
 
+.nav-links a {
+    text-decoration: none;
+    color: #000; /* Основной цвет текста */
+    font-weight: 400; /* Обычный вес */
+    transition: all 0.3s ease;
+}
+
+.nav-links a.active {
+    font-weight: 700; /* Жирный шрифт для активной ссылки */
+    color: #007bff; /* Выделите цветом для видимости (например, синий) */
+}
+
+
 .navbar-center .nav-links li {
     margin-right: 1rem;
 }

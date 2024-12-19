@@ -1,20 +1,23 @@
-import './App.css';
-import Navbar from './components/Navbar'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+// import Contacts from './components/Contacts';
+// import Help from './components/Help';
+// import Statistics from './components/Statistics';
 import RentalTable from './components/RentalTable';
-import ToolTable from './components/ToolTable';
-import WorkerTable from './components/WorkerTable';
 
-export default function App() 
-{ 
-  return (
-    <div className="App">
-      <div>
-        <Navbar/>
-      </div>
-      <div className="Body">
-        <h1>Аренда Инструментов</h1>
-        <RentalTable/>
-      </div>
-    </div>
-  );
-}
+const App = () => {
+    return (
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/Rental" element={<RentalTable />} />
+                {/* <Route path="/Contacts" element={<Contacts />} />
+                <Route path="/Help" element={<Help />} />
+                <Route path="/Statistics" element={<Statistics />} /> */}
+            </Routes>
+        </Router>
+    );
+};
+
+export default App;
