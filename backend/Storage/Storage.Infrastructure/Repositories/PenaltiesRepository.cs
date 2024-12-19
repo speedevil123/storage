@@ -58,7 +58,7 @@ namespace Storage.Infrastructure.Repositories
             var penaltyExists = await _context.Penalties
                 .AnyAsync(p => p.Id == id);
 
-            if (penaltyExists)
+            if (!penaltyExists)
             {
                 throw new KeyNotFoundException("PenaltyEntity not found");
             }

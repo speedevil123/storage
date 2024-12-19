@@ -27,6 +27,21 @@ builder.Services.AddScoped<IWorkersRepository, WorkersRepository>();
 builder.Services.AddScoped<IRentalsService, RentalsService>();
 builder.Services.AddScoped<IRentalsRepository, RentalsRepository>();
 
+builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+
+builder.Services.AddScoped<IDepartmentsService, DepartmentsService>();
+builder.Services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
+
+builder.Services.AddScoped<IManufacturersService, ManufacturersService>();
+builder.Services.AddScoped<IManufacturersRepository, ManufacturersRepository>();
+
+builder.Services.AddScoped<IModelsService, ModelsService>();
+builder.Services.AddScoped<IModelsRepository, ModelsRepository>();
+
+builder.Services.AddScoped<IPenaltiesService, PenaltiesService>();
+builder.Services.AddScoped<IPenaltiesRepository, PenaltiesRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

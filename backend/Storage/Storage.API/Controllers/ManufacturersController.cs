@@ -43,7 +43,7 @@ namespace Storage.API.Controllers
                 request.PostIndex);
 
             var manufacturerId = await _manufacturersService.CreateManufacturer(manufacturer);
-            return Ok(manufacturer);
+            return Ok(manufacturerId);
         }
 
         [HttpPut("{id:guid}")]

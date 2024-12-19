@@ -12,7 +12,7 @@ namespace Storage.API.Controllers
     public class PenaltiesController : ControllerBase
     {
         private readonly IPenaltiesService _penaltiesService;
-        PenaltiesController(IPenaltiesService penaltiesService)
+        public PenaltiesController(IPenaltiesService penaltiesService)
         {
             _penaltiesService = penaltiesService;
         }
@@ -26,8 +26,8 @@ namespace Storage.API.Controllers
                 p.Id,
                 p.Fine,
                 p.PenaltyDate,
-                p.WorkerId,
-                p.ToolId,
+                p.Rental.WorkerId,
+                p.Rental.ToolId,
                 p.Rental.Worker.Name,
                 p.Rental.Tool.Model.Category.Name + " " + p.Rental.Tool.Model.Name));
 
