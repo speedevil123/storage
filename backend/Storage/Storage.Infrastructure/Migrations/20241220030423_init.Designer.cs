@@ -12,7 +12,7 @@ using Storage.DataAccess;
 namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageDbContext))]
-    [Migration("20241219132117_init")]
+    [Migration("20241220030423_init")]
     partial class init
     {
         /// <inheritdoc />

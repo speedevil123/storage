@@ -141,6 +141,13 @@ const RentalTable = () => {
                             updateField(record.key, 'workerName', selectedWorker.name);
                         }
                     }}
+                    onChange={(value) => {
+                        const Worker = workers.find((worker) => worker.id === value);
+                        if(Worker) {
+                            updateField(record.key, 'workerId', Worker.id);
+                            updateField(record.key, 'workerName', Worker.name);
+                        }
+                    }}
                     style={{ width: '100%' }}
                     placeholder="Выберите работника"
                 />
