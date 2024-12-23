@@ -28,9 +28,9 @@ namespace Storage.API.Controllers
                     r.ToolId,
                     r.Worker.Name,
                     r.Tool.Model.Category.Name + " " + r.Tool.Model.Name,
-                    r.StartDate.ToString("dd.MM.yyyy"),
-                    r.ReturnDate.ToString("dd.MM.yyyy"),
-                    r.EndDate.ToString("dd.MM.yyyy"),
+                    r.StartDate.ToString("dd.MM.yyyy hh:mm::ss"),
+                    r.ReturnDate.ToString("dd.MM.yyyy hh:mm::ss"),
+                    r.EndDate.ToString("dd.MM.yyyy hh:mm::ss"),
                     r.Status,
                     r.ToolQuantity));
 

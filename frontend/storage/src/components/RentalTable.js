@@ -1,14 +1,14 @@
 import React from 'react';
 import { AutoComplete, Button, Table, Input } from 'antd';
 import { useEffect, useState } from 'react';
-import { GETRequest } from '../request';
+import { GETRequest, POSTRequest } from '../request';
 import { CheckOutlined, CheckCircleOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { message } from 'antd';
 
 message.config({
-    duration: 3, // Длительность отображения сообщения (в секундах)
-    maxCount: 1, // Максимальное количество одновременно отображаемых сообщений
+    duration: 3, 
+    maxCount: 1, 
 });
 
 const RentalTable = () => {
@@ -21,40 +21,41 @@ const RentalTable = () => {
     const [searchText, setSearchText] = useState(''); // Для поиска
 
 
-    //ТЕСТОВЫЕ ДАННЫЕ
-    const generateMockData = () => {
-        const workerNames = ['Иван Иванов', 'Анна Смирнова', 'Петр Петров', 'Ольга Сидорова', 'Дмитрий Кузнецов'];
-        const toolNames = ['Отвертка', 'Молоток', 'Гаечный ключ', 'Дрель', 'Шуруповерт'];
-        const statuses = ['Активен', 'Завершено'];
+    // //ТЕСТОВЫЕ ДАННЫЕ
+    // const generateMockData = () => {
+    //     const workerNames = ['Иван Иванов', 'Анна Смирнова', 'Петр Петров', 'Ольга Сидорова', 'Дмитрий Кузнецов'];
+    //     const toolNames = ['Отвертка', 'Молоток', 'Гаечный ключ', 'Дрель', 'Шуруповерт'];
+    //     const statuses = ['Активен', 'Завершено', 'Просрочено']; // Добавить статус в массив
 
-        const mockData = Array.from({ length: 30 }, (_, index) => {
-            const randomWorker = workerNames[Math.floor(Math.random() * workerNames.length)];
-            const randomTool = toolNames[Math.floor(Math.random() * toolNames.length)];
-            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-            const randomDate = new Date(
-                Date.now() + Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000
-            ).toISOString().split('T')[0];
 
-            return {
-                key: `item-${index + 1}`,
-                workerName: randomWorker,
-                workerId: index + 1,
-                toolName: randomTool,
-                toolId: index + 1,
-                startDate: new Date().toISOString().split('T')[0], // Сегодняшняя дата
-                returnDate: randomStatus === 'Завершено' ? randomDate : '',
-                endDate: randomStatus === 'Активен' ? randomDate : '',
-                status: randomStatus,
-                toolQuantity: Math.floor(Math.random() * 10) + 1,
-            };
-        });
+    //     const mockData = Array.from({ length: 30 }, (_, index) => {
+    //         const randomWorker = workerNames[Math.floor(Math.random() * workerNames.length)];
+    //         const randomTool = toolNames[Math.floor(Math.random() * toolNames.length)];
+    //         const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    //         const randomDate = formatDate(new Date(
+    //             Date.now() + Math.floor(Math.random() * 10 - 5) * 24 * 60 * 60 * 1000 // Дата может быть до или после текущей
+    //         ));
 
-        setDataSource(mockData);
-    };
+    //         return {
+    //             key: `item-${index + 1}`,
+    //             workerName: randomWorker,
+    //             workerId: index + 1,
+    //             toolName: randomTool,
+    //             toolId: index + 1,
+    //             startDate: formatDate(new Date()), // Сегодняшняя дата
+    //             returnDate: randomStatus === 'Завершено' || randomStatus == 'Просрочено' ? randomDate : '',
+    //             endDate: randomStatus !== 'Неопределен' ? randomDate : '',
+    //             status: randomStatus,
+    //             toolQuantity: Math.floor(Math.random() * 10) + 1,
+    //         };
+    //     });
 
-    useEffect(() => {
-        generateMockData(); // Генерация данных при загрузке компонента
-    }, []);
+    //     setDataSource(mockData);
+    // };
+
+    // useEffect(() => {
+    //     generateMockData(); // Генерация данных при загрузке компонента
+    // }, []);
 
     const filteredDataSource = dataSource.filter((item) =>
         Object.values(item).some(
@@ -64,23 +65,16 @@ const RentalTable = () => {
         )
     );
 
-    const validateRow = (record) => {
-        const errors = [];
-    
-        if (!record.workerName || record.workerName.trim() === '') {
-            errors.push('Имя работника не заполнено.');
+    const validateRow = (record) => {    
+        if (
+            !record.workerName || record.workerName.trim() === '' ||
+            !record.toolName || record.toolName.trim() === '' ||
+            !record.toolQuantity || isNaN(record.toolQuantity || record.toolQuantity <= 0) ||
+            !record.endDate || new Date(record.endDate) < new Date()
+        ) {
+            return ['Пожалуйста заполните все поля!']
         }
-        if (!record.toolName || record.toolName.trim() === '') {
-            errors.push('Название инструмента не заполнено.');
-        }
-        if (!record.toolQuantity || isNaN(record.toolQuantity) || record.toolQuantity <= 0) {
-            errors.push('Количество инструмента должно быть положительным числом.');
-        }
-        if (!record.endDate || new Date(record.endDate) < new Date()) {
-            errors.push('Планируемая дата возврата должна быть позже текущей даты.');
-        }
-    
-        return errors;
+        return [];
     };
     
     const handleActivate = (key) => {
@@ -90,17 +84,30 @@ const RentalTable = () => {
         const errors = validateRow(record);
     
         if (errors.length > 0) {
-            message.error(`Ошибка: ${errors.join(' ')}`);
+            message.error(`${errors.join(' ')}`);
             return;
         }
+
+        const newRental = {
+            workerId: record.workerId,
+            toolId: record.toolId,
+            returnDate: record.returnDate,
+            endDate: record.endDate,
+            toolQuantity: record.toolQuantity
+        };
+
+        const rentalId = POSTRequest('/Rentals/Create', newRental);
     
-        setDataSource((prevData) =>
-            prevData.map((item) =>
-                item.key === key
-                    ? { ...item, status: 'Активен' } // Изменяем статус на "Активен"
-                    : item
-            )
-        );
+        if(rentalId)
+        {
+            setDataSource((prevData) =>
+                prevData.map((item) =>
+                    item.key === key
+                        ? { ...item, endDate: formatDate(item.endDate), status: 'Активен' } // Изменяем статус на "Активен"
+                        : item
+                )
+            );
+        }
     };
 
     const handleComplete = (key) => {
@@ -115,12 +122,21 @@ const RentalTable = () => {
         }
     
         const today = formatDate(new Date());
+        const isOverdue = new Date(today) > new Date(record.endDate);
+    
         setDataSource((prevData) =>
             prevData.map((item) =>
-                item.key === key ? { ...item, status: 'Завершено', returnDate: today } : item
+                item.key === key
+                    ? {
+                        ...item,
+                        status: isOverdue ? 'Просрочено' : 'Завершено',
+                        returnDate: today,
+                    }
+                    : item
             )
         );
     };
+    
     
 
     const updateField = (key, field, value) => {
@@ -196,7 +212,10 @@ const RentalTable = () => {
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const year = d.getFullYear();
-        return `${day}.${month}.${year}`;
+        const hour = d.getHours();
+        const minute = d.getMinutes();
+        const seconds = d.getSeconds();
+        return `${day}.${month}.${year} ${hour}:${minute}:${seconds}`;
     };
     
 
@@ -206,7 +225,7 @@ const RentalTable = () => {
             message.error('Вы можете добавить только одну строку в режиме добавления.');
             return;
         }
-    
+
         const newRow = {
             key: `new-${dataSource.length + 1}`,
             workerName: '',
@@ -246,12 +265,13 @@ const RentalTable = () => {
             dataIndex: 'workerName',
             key: 'workerName',
             width: 200,
+            sorter: (a, b) => a.workerName.localeCompare(b.workerName),
             filters: [
                 ...new Set(dataSource.map((item) => item.workerName)),
             ].map((worker) => ({ text: worker, value: worker })),
             onFilter: (value, record) => record.workerName.includes(value), 
             render: (text, record) => (
-                record.status !== 'Активен' ? (
+                record.status === 'Неопределен' ? (
                     <AutoComplete
                         value={record.workerName || ''}
                         onSearch={(searchText) => {
@@ -285,11 +305,13 @@ const RentalTable = () => {
             dataIndex: 'toolName',
             key: 'toolName',
             width: 300,
+            sorter: (a, b) => a.toolName.localeCompare(b.toolName),
             filters: [
                 ...new Set(dataSource.map((item) => item.toolName)),
             ].map((tool) => ({ text: tool, value: tool })),
             onFilter: (value, record) => record.toolName.includes(value), 
             render: (text, record) => (
+                record.status === 'Неопределен' ? (
                 <AutoComplete
                     value={record.toolName || ''}
                     onSearch={(searchText) => {
@@ -315,13 +337,17 @@ const RentalTable = () => {
                     style={{ width: '100%' }}
                     placeholder="Введите название инструмента"
                 />
+            ) : (
+                <Input type="text" value={record.toolName || ''} readOnly style={readOnlyStyle} />
+            )
             ),
         },
         {
             title: 'Дата Взят',
             dataIndex: 'startDate',
             key: 'startDate',
-            width: 150, 
+            width: 150,
+            sorter: (a, b) => a.startDate.localeCompare(b.startDate), 
             render: (text) => (
                 <Input type="text" value={text} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
             ),
@@ -331,20 +357,25 @@ const RentalTable = () => {
             dataIndex: 'endDate',
             key: 'endDate',
             width: 180, 
+            sorter: (a, b) => a.endDate.localeCompare(b.endDate), 
             render: (text, record) => (
+                record.status === 'Неопределен' ? (
                 <Input
                     type="date"
                     value={text || ''}
                     onChange={(e) => updateField(record.key, 'endDate', e.target.value)}
                     style={{ width: '100%' }}
                 />
-            ),
+            ) : (
+                <Input type="text" value={record.endDate || ''} readOnly style={readOnlyStyle} />
+            )),
         },
         {
             title: 'Фактический Возврат',
             dataIndex: 'returnDate',
             key: 'returnDate',
             width: 180, 
+            sorter: (a, b) => a.returnDate.localeCompare(b.returnDate), 
             render: (text) => (
                 <Input type="text" value={text || 'Автоматически'} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
             ),
@@ -354,10 +385,12 @@ const RentalTable = () => {
             dataIndex: 'status',
             key: 'status',
             width: 150, 
+            sorter: (a, b) => a.status.localeCompare(b.status), 
             filters: [
                 { text: 'Неопределен', value: 'Неопределен' },
                 { text: 'Активен', value: 'Активен' },
                 { text: 'Завершено', value: 'Завершено' },
+                { text: 'Просрочено', value: 'Просрочено' },
             ],
             onFilter: (value, record) => record.status === value,
             render: (text) => (
@@ -365,11 +398,13 @@ const RentalTable = () => {
                     style={{
                         width: '100%',
                         backgroundColor:
-                    text === 'Активен'
-                        ? '#d4edda' 
-                        : text === 'Завершено'
-                        ? '#f8d7da' 
-                        : 'transparent', 
+                            text === 'Активен'
+                                ? '#d4edda' 
+                                : text === 'Завершено'
+                                ? '#f8d7da' 
+                                : text === 'Просрочено'
+                                ? '#FFE4B5'
+                                : 'transparent', 
                         padding: '4px',
                         borderRadius: '4px',
                         textAlign: 'center',
@@ -378,14 +413,15 @@ const RentalTable = () => {
                     {text}
                 </div>
             ),
-        },
+        },        
         {
             title: 'Кол-во',
             dataIndex: 'toolQuantity',
             key: 'toolQuantity',
             width: 100, 
+            sorter: (a, b) => a.toolQuantity - b.toolQuantity, 
             render: (text, record) => (
-                record.status !== 'Активен' ? (
+                record.status === 'Неопределен' ? (
                     <Input
                         type="number"
                         value={text || ''}
