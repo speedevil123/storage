@@ -16,9 +16,10 @@ export let GETRequest = async (path) => {
 
 export let POSTRequest = async (path, values, AbortSignal = new AbortController().signal) => {
     try {
+        console.log('Sending values:', values);
         const response = await fetch(serverPath + path, {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             method: 'POST',
             credentials: 'include',
@@ -31,7 +32,7 @@ export let POSTRequest = async (path, values, AbortSignal = new AbortController(
         return await response.json();
     }
     catch (error) {
-        console.error("GET request failed:", error);
+        console.error("POST request failed:", error);
         throw error;
     }
 };

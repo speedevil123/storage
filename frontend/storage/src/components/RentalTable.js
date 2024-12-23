@@ -91,12 +91,14 @@ const RentalTable = () => {
         const newRental = {
             workerId: record.workerId,
             toolId: record.toolId,
+            startDate: record.startDate,
             returnDate: record.returnDate,
             endDate: record.endDate,
+            status: record.status,
             toolQuantity: record.toolQuantity
         };
 
-        const rentalId = POSTRequest('/Rentals/Create', newRental);
+        const rentalId = POSTRequest('/Rentals', newRental);
     
         if(rentalId)
         {
