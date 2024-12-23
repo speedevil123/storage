@@ -65,16 +65,20 @@ const RentalTable = () => {
         )
     );
 
-    const validateRow = (record) => {    
+    const validateRow = (record) => {   
+        const errors = []; 
         if (
             !record.workerName || record.workerName.trim() === '' ||
             !record.toolName || record.toolName.trim() === '' ||
-            !record.toolQuantity || isNaN(record.toolQuantity || record.toolQuantity <= 0) ||
-            !record.endDate || new Date(record.endDate) < new Date()
-        ) {
-            return ['Пожалуйста заполните все поля!']
+            !record.toolQuantity || isNaN(record.toolQuantity || record.toolQuantity <= 0)) 
+        {
+            errors.push('Пожалуйста заполните все поля!');
         }
-        return [];
+        if(!record.endDate || new Date(record.endDate) < new Date())
+        {
+            errors.push('Дата возврата должна быть позже даты взятия.')
+        }
+        return errors;
     };
     
     const handleActivate = (key) => {
@@ -84,7 +88,7 @@ const RentalTable = () => {
         const errors = validateRow(record);
     
         if (errors.length > 0) {
-            message.error(`${errors.join(' ')}`);
+            message.error(errors.map((error) => <p style={{margin: '0', textAlign: 'left'}}>{error}</p>));
             return;
         }
 
@@ -306,7 +310,7 @@ const RentalTable = () => {
             title: 'Название Инструмента',
             dataIndex: 'toolName',
             key: 'toolName',
-            width: 300,
+            width: 250,
             sorter: (a, b) => a.toolName.localeCompare(b.toolName),
             filters: [
                 ...new Set(dataSource.map((item) => item.toolName)),
@@ -348,7 +352,7 @@ const RentalTable = () => {
             title: 'Дата Взят',
             dataIndex: 'startDate',
             key: 'startDate',
-            width: 150,
+            width: 165,
             sorter: (a, b) => a.startDate.localeCompare(b.startDate), 
             render: (text) => (
                 <Input type="text" value={text} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
@@ -358,7 +362,7 @@ const RentalTable = () => {
             title: 'Планируемый Возврат',
             dataIndex: 'endDate',
             key: 'endDate',
-            width: 180, 
+            width: 135, 
             sorter: (a, b) => a.endDate.localeCompare(b.endDate), 
             render: (text, record) => (
                 record.status === 'Неопределен' ? (
@@ -376,17 +380,17 @@ const RentalTable = () => {
             title: 'Фактический Возврат',
             dataIndex: 'returnDate',
             key: 'returnDate',
-            width: 180, 
+            width: 165, 
             sorter: (a, b) => a.returnDate.localeCompare(b.returnDate), 
             render: (text) => (
-                <Input type="text" value={text || 'Автоматически'} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
+                <Input type="text" value={text || 'Авто'} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
             ),
         },
         {
             title: 'Статус',
             dataIndex: 'status',
             key: 'status',
-            width: 150, 
+            width: 100, 
             sorter: (a, b) => a.status.localeCompare(b.status), 
             filters: [
                 { text: 'Неопределен', value: 'Неопределен' },

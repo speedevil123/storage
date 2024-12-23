@@ -12,7 +12,7 @@ const App = () => {
             <Navbar />
             <Routes>
                   <Route path="/Rental" element={
-                    <div style={{ margin: '50px 100px' }}>
+                    <div style={{ margin: '50px 75px' }}>
                         <RentalTable/>
                     </div>} />
                 {/* <Route path="/Contacts" element={<Contacts />} />
