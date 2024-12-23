@@ -25,7 +25,7 @@ const RentalTable = () => {
     const generateMockData = () => {
         const workerNames = ['Иван Иванов', 'Анна Смирнова', 'Петр Петров', 'Ольга Сидорова', 'Дмитрий Кузнецов'];
         const toolNames = ['Отвертка', 'Молоток', 'Гаечный ключ', 'Дрель', 'Шуруповерт'];
-        const statuses = ['Неопределен', 'Активен', 'Завершено'];
+        const statuses = ['Активен', 'Завершено'];
 
         const mockData = Array.from({ length: 30 }, (_, index) => {
             const randomWorker = workerNames[Math.floor(Math.random() * workerNames.length)];
