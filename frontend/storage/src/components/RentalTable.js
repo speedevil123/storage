@@ -1,7 +1,7 @@
 import React from 'react';
 import { AutoComplete, Button, Table, Input } from 'antd';
 import { useEffect, useState } from 'react';
-import { GETRequest, POSTRequest } from '../request';
+import { DELETERequest, GETRequest, POSTRequest, PUTRequest } from '../request';
 import { CheckOutlined, CheckCircleOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { message } from 'antd';
@@ -17,6 +17,10 @@ const RentalTable = () => {
     const [dataSource, setDataSource] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedRowKey, setSelectedRowKey] = useState(null);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+    });
 
     const [searchText, setSearchText] = useState(''); // Для поиска
 
@@ -74,11 +78,22 @@ const RentalTable = () => {
         {
             errors.push('Пожалуйста заполните все поля!');
         }
-        if(!record.endDate || new Date(record.endDate) < new Date())
-        {
-            errors.push('Дата возврата должна быть позже даты взятия.')
-        }
+        // if(!record.endDate || new Date(record.endDate) < new Date())
+        // {
+        //     errors.push('Дата возврата должна быть позже даты взятия.')
+        // }
         return errors;
+    };
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hour = d.getHours();
+        const minute = d.getMinutes();
+        const seconds = d.getSeconds();
+        return `${day}.${month}.${year} ${hour}:${minute}:${seconds}`;
     };
     
     const handleActivate = (key) => {
@@ -97,8 +112,8 @@ const RentalTable = () => {
             toolId: record.toolId,
             startDate: record.startDate,
             returnDate: record.returnDate,
-            endDate: record.endDate,
-            status: record.status,
+            endDate: formatDate(record.endDate),
+            status: 'Активен',
             toolQuantity: record.toolQuantity
         };
 
@@ -108,11 +123,13 @@ const RentalTable = () => {
         {
             setDataSource((prevData) =>
                 prevData.map((item) =>
-                    item.key === key
-                        ? { ...item, endDate: formatDate(item.endDate), status: 'Активен' } // Изменяем статус на "Активен"
-                        : item
+                    item.key === key ? {...item, ...newRental, key: item.key} : item
                 )
             );
+        }
+        else
+        {
+            message.error("Ошибка добавления аренды")
         }
     };
 
@@ -128,19 +145,30 @@ const RentalTable = () => {
         }
     
         const today = formatDate(new Date());
-        const isOverdue = new Date(today) > new Date(record.endDate);
-    
-        setDataSource((prevData) =>
-            prevData.map((item) =>
-                item.key === key
-                    ? {
-                        ...item,
-                        status: isOverdue ? 'Просрочено' : 'Завершено',
-                        returnDate: today,
-                    }
-                    : item
-            )
-        );
+        const isOverdue = compareFormattedDates(today, record.endDate);
+        
+        const rentalToUpdate = {
+            startDate: record.startDate,
+            returnDate: today,
+            endDate: record.endDate,
+            status: isOverdue ? 'Просрочено' : 'Завершено',
+            toolQuantity: record.toolQuantity
+        }
+
+        const rentalId = PUTRequest(`/Rentals/${record.workerId}/${record.toolId}`, rentalToUpdate);
+
+        if(rentalId)
+        {
+            setDataSource((prevData) =>
+                prevData.map((item) =>
+                    item.key === key ? {...item, ...rentalToUpdate, key: item.key}: item
+                )
+            );
+        }
+        else
+        {
+            message.error("Ошибка обновления аренды")
+        }
     };
     
     
@@ -154,11 +182,30 @@ const RentalTable = () => {
     };
 
     const deleteRow = (key) => {
-        setDataSource((prevData) => prevData.filter((item) => item.key !== key));
+        const record = dataSource.find((item) => item.key === key);
+
+        if (record.status === 'Неопределен') {
+            setDataSource((prevData) => prevData.filter((item) => item.key !== key));
+            setIsModalVisible(false);
+            return;
+        }
+
+        const rentalId = DELETERequest(`/Rentals/${record.workerId}/${record.toolId}`);
+        if(rentalId)
+        {
+            setDataSource((prevData) => prevData.filter((item) => item.key !== key));
+            message.success("Аренда успешно удалена");
+        }
+        else
+        {
+            message.error("Ошибка удаления аренды")
+        }
         setIsModalVisible(false);
+
     };
 
     const showDeleteModal = (key) => {
+        console.log(key);
         setSelectedRowKey(key);
         setIsModalVisible(true);
     };
@@ -187,43 +234,48 @@ const RentalTable = () => {
         try {
             const toolsData = await GETRequest('/Tools');
             setTools(toolsData);
+            console.log(toolsData);
         } catch (error) {
             console.error('Error fetching tools:', error);
         }
     };
 
-    // const getRentals = async () => {
-    //     try {
-    //         const rentalsData = await GETRequest('/Rentals');
-    //         const rentalRows = rentalsData.map((rental) => ({
-    //             key: rental.workerId + " " + rental.ToolId,
-    //             workerName: rental.workerName,
-    //             workerId: rental.workerId,
-    //             toolName: rental.toolName,
-    //             toolId: rental.toolId,
-    //             startDate: rental.startDate,
-    //             returnDate: rental.returnDate,
-    //             endDate: rental.endDate,
-    //             status: rental.status,
-    //             toolQuantity: rental.toolQuantity,
-    //         }));
-    //         setDataSource(rentalRows);
-    //     } catch (error) {
-    //         console.error('Error fetching rentals:', error);
-    //     }
-    // };
+    const getRentals = async () => {
+        try {
+            const rentalsData = await GETRequest('/Rentals');
+            const rentalRows = rentalsData.map((rental) => ({
+                key: `${rental.workerId} ${rental.toolId}`,
+                workerName: rental.workerName,
+                workerId: rental.workerId,
+                toolName: rental.toolName,
+                toolId: rental.toolId,
+                startDate: rental.startDate,
+                returnDate: rental.returnDate.toString() == '01.01.0001 12:00:00' ? 'Ожидает возврата' : rental.returnDate,
+                endDate: rental.endDate,
+                status: rental.status,
+                toolQuantity: rental.toolQuantity,
+            }));
+            setDataSource(rentalRows);
+        } catch (error) {
+            console.error('Error fetching rentals:', error);
+        }
+    };
 
-    const formatDate = (date) => {
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        const hour = d.getHours();
-        const minute = d.getMinutes();
-        const seconds = d.getSeconds();
-        return `${day}.${month}.${year} ${hour}:${minute}:${seconds}`;
+    const parseFormattedDate = (formattedDate) => {
+        const [datePart, timePart] = formattedDate.split(' ');
+        const [day, month, year] = datePart.split('.').map(Number);
+        const [hour, minute, second] = timePart.split(':').map(Number);
+        return new Date(year, month - 1, day, hour, minute, second); 
     };
     
+    const compareFormattedDates = (formattedDate1, formattedDate2) => {
+        const date1 = parseFormattedDate(formattedDate1);
+        const date2 = parseFormattedDate(formattedDate2);
+    
+        if (date1 > date2) return 1;
+        if (date1 < date2) return -1; 
+        return 0; 
+    };
 
     const handleAddCustomRow = () => {
         const hasUndefinedRow = dataSource.some((row) => row.status === 'Неопределен');
@@ -248,7 +300,7 @@ const RentalTable = () => {
     };
 
     useEffect(() => {
-        // getRentals();
+        getRentals();
         getWorkers();
         getTools();
     }, []);
@@ -264,7 +316,11 @@ const RentalTable = () => {
             title: '№',
             key: 'index',
             width: 50,
-            render: (text, record, index) => index + 1,
+            render: (text, record, index) => {
+                const currentPage = pagination.current || 1; 
+                const pageSize = pagination.pageSize || 10;  
+                return (currentPage - 1) * pageSize + index + 1; 
+            },
         },
         {
             title: 'Имя Работника',
@@ -322,7 +378,7 @@ const RentalTable = () => {
                     value={record.toolName || ''}
                     onSearch={(searchText) => {
                         const filteredTools = tools.filter(tool =>
-                            `${tool.categoryName} - ${tool.modelName} (${tool.manufacturerName})`
+                            `${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`
                                 .toLowerCase()
                                 .includes(searchText.toLowerCase())
                         );
@@ -331,13 +387,13 @@ const RentalTable = () => {
                     }}
                     options={(record.filteredTools || tools).map(tool => ({
                         value: tool.id,
-                        label: `${tool.categoryName} - ${tool.modelName} (${tool.manufacturerName})`,
+                        label: `${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName} ${tool.quantity} шт.`,
                     }))}
                     onSelect={(value) => {
                         const selectedTool = tools.find(tool => tool.id === value);
                         if (selectedTool) {
                             updateField(record.key, 'toolId', selectedTool.id);
-                            updateField(record.key, 'toolName', `${selectedTool.categoryName} - ${selectedTool.modelName} (${selectedTool.manufacturerName})`);
+                            updateField(record.key, 'toolName', `${selectedTool.categoryName} ${selectedTool.modelName} - ${selectedTool.manufacturerName}`);
                         }
                     }}
                     style={{ width: '100%' }}
@@ -383,7 +439,7 @@ const RentalTable = () => {
             width: 165, 
             sorter: (a, b) => a.returnDate.localeCompare(b.returnDate), 
             render: (text) => (
-                <Input type="text" value={text || 'Авто'} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
+                <Input type="text" value={text || 'Ожидает возврата'} readOnly style={{ ...readOnlyStyle, width: '100%' }} />
             ),
         },
         {
@@ -485,7 +541,10 @@ const RentalTable = () => {
             <Table
                 dataSource={filteredDataSource}
                 columns={columns}
-                pagination={{ pageSize: 10 }}
+                pagination={{
+                    ...pagination,
+                    onChange: (page, pageSize) => setPagination({ current: page, pageSize }),
+                }}
                 rowKey="key"
             />
             <ConfirmDeleteModal

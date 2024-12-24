@@ -27,10 +27,10 @@ namespace Storage.API.Controllers
                     r.WorkerId,
                     r.ToolId,
                     r.Worker.Name,
-                    r.Tool.Model.Category.Name + " " + r.Tool.Model.Name,
-                    r.StartDate.ToString("dd.MM.yyyy hh:mm::ss"),
-                    r.ReturnDate.ToString("dd.MM.yyyy hh:mm::ss"),
-                    r.EndDate.ToString("dd.MM.yyyy hh:mm::ss"),
+                    $"{r.Tool.Model.Category.Name} {r.Tool.Model.Name} - {r.Tool.Manufacturer.Name}",
+                    r.StartDate.ToString("dd.MM.yyyy hh:mm:ss"),
+                    r.ReturnDate.ToString("dd.MM.yyyy hh:mm:ss"),
+                    r.EndDate.ToString("dd.MM.yyyy hh:mm:ss"),
                     r.Status,
                     r.ToolQuantity));
 
@@ -41,31 +41,37 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateRental([FromBody] RentalsRequest request)
         {
             var rental = new Rental(
-                request.WorkerId, 
-                request.ToolId, 
-                DateTime.Now, 
-                request.ReturnDate, 
-                request.EndDate, 
-                "Активен", 
+                request.workerId, 
+                request.toolId,
+                Convert.ToDateTime(request.startDate), 
+                request.returnDate == "" ? DateTime.MinValue : Convert.ToDateTime(request.returnDate), 
+                Convert.ToDateTime(request.endDate), 
+                request.status, 
                 null,
                 null,
-                request.ToolQuantity);
+                request.toolQuantity);
 
             var rentalToolId = await _RentalsService.CreateRental(rental);
             return Ok(rentalToolId);
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPut("{workerId:guid}/{toolId:guid}")]
         public async Task<ActionResult<Guid>> UpdateRental(Guid workerId, Guid toolId, [FromBody] RentalsRequest request)
         {
             var rentalToolId = await _RentalsService
-                .UpdateRental(request.WorkerId, request.ToolId, request.StartDate, request.ReturnDate,
-                request.EndDate, request.Status, request.ToolQuantity);
+                .UpdateRental(
+                workerId, 
+                toolId, 
+                Convert.ToDateTime(request.startDate), 
+                Convert.ToDateTime(request.returnDate),
+                Convert.ToDateTime(request.endDate), 
+                request.status, 
+                request.toolQuantity);
 
             return Ok(rentalToolId);
         }
 
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("{workerId:guid}/{toolId:guid}")]
         public async Task<ActionResult<Guid>> DeleteRental(Guid workerId, Guid toolId)
         {
             var rentalToolId = await _RentalsService.DeleteRental(workerId, toolId);
