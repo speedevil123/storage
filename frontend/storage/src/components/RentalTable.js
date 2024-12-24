@@ -36,7 +36,8 @@ const RentalTable = () => {
         if (
             !record.workerName || record.workerName.trim() === '' ||
             !record.toolName || record.toolName.trim() === '' ||
-            !record.toolQuantity) 
+            !record.toolQuantity ||
+            !record.endDate) 
         {
             console.log(record.toolQuantity);
             errors.push('Пожалуйста заполните все поля');
@@ -362,11 +363,14 @@ const RentalTable = () => {
                             .filter((rental) => rental.toolId === tool.id && rental.status === 'Активен')
                             .reduce((sum, rental) => sum + rental.toolQuantity, 0);
                         const availableQuantity = tool.quantity - takenQuantity;
-        
-                        return {
-                            value: tool.id,
-                            label: `(${availableQuantity} шт.) ${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`,
-                        };
+                        
+                        if(availableQuantity > 0)
+                        {
+                            return {
+                                value: tool.id,
+                                label: `(${availableQuantity} шт.) ${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`,
+                            };
+                        }
                     })}
                     onSelect={(value) => {
                         const selectedTool = tools.find(tool => tool.id === value);

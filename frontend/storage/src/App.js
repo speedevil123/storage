@@ -19,7 +19,10 @@ const App = () => {
                 {/* <Route path="/Contacts" element={<Contacts />} />
                 <Route path="/Help" element={<Help />} />
                 <Route path="/Statistics" element={<Statistics />} /> */}
-                <Route path="/ManageTables" element={<ManageTables/>}/>
+                <Route path="/ManageTables" element={
+                    <div style={{margin: '50px 150px'}}>
+                        <ManageTables/>
+                    </div>}/>
             </Routes>
         </Router>
     );

@@ -32,7 +32,7 @@ const ToolTable = () => {
 
   return (
     <div>
-      <h1>Ant Design Table</h1>
+      <h2>Инструменты</h2>
       <Table dataSource={data} columns={columns} />
     </div>
   );

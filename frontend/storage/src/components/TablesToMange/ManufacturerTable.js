@@ -32,7 +32,7 @@ const ManufacturerTable = () => {
 
   return (
     <div>
-      <h1>Ant Design Table</h1>
+      <h2>Производители инструментов</h2>
       <Table dataSource={data} columns={columns} />
     </div>
   );

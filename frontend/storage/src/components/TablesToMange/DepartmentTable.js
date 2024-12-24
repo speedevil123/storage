@@ -32,7 +32,7 @@ const DepartmentTable = () => {
 
   return (
     <div>
-      <h1>Ant Design Table</h1>
+      <h2>Отделы организации</h2>
       <Table dataSource={data} columns={columns} />
     </div>
   );

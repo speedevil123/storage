@@ -42,7 +42,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult<Guid>> UpdateCategory(Guid id, [FromBody] CategoriesRequest request)
         {
             var categoryId = await _categoriesService
-                .UpdateCategory(request.Id, request.Name);
+                .UpdateCategory(id, request.Name);
 
             return Ok(categoryId);
         }
