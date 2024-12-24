@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 // import Help from './components/Help';
 // import Statistics from './components/Statistics';
 import RentalTable from './components/RentalTable';
+import ManageTables from './components/ManageTables';
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                 {/* <Route path="/Contacts" element={<Contacts />} />
                 <Route path="/Help" element={<Help />} />
                 <Route path="/Statistics" element={<Statistics />} /> */}
+                <Route path="/ManageTables" element={<ManageTables/>}/>
             </Routes>
         </Router>
     );

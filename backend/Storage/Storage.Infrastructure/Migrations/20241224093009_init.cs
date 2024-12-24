@@ -158,6 +158,7 @@ namespace Storage.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Fine = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
                     PenaltyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPaidOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     ToolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },

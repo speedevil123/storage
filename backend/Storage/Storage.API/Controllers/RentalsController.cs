@@ -10,17 +10,19 @@ namespace Storage.API.Controllers
     [Route("[controller]")]
     public class RentalsController : ControllerBase
     {
-        private readonly IRentalsService _RentalsService;
+        private readonly IRentalsService _rentalsService;
+        private readonly IPenaltiesService _penaltiesService;
 
-        public RentalsController(IRentalsService RentalsService)
+        public RentalsController(IRentalsService rentalsService, IPenaltiesService penaltiesService)
         {
-            _RentalsService = RentalsService;
+            _penaltiesService = penaltiesService;
+            _rentalsService = rentalsService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<RentalsResponse>>> GetRentals()
         {
-            var rentals = await _RentalsService
+            var rentals = await _rentalsService
                 .GetAllRentals();
 
             var response = rentals.Select(r => new RentalsResponse(
@@ -51,14 +53,28 @@ namespace Storage.API.Controllers
                 null,
                 request.toolQuantity);
 
-            var rentalToolId = await _RentalsService.CreateRental(rental);
+            var rentalToolId = await _rentalsService.CreateRental(rental);
             return Ok(rentalToolId);
         }
 
         [HttpPut("{workerId:guid}/{toolId:guid}")]
         public async Task<ActionResult<Guid>> UpdateRental(Guid workerId, Guid toolId, [FromBody] RentalsRequest request)
         {
-            var rentalToolId = await _RentalsService
+            if(request.status == "Просрочено")
+            {
+                var daysDelay = (Convert.ToDateTime(request.returnDate) - Convert.ToDateTime(request.endDate)).TotalDays;
+                var penalty = new Penalty(
+                    Guid.NewGuid(),
+                     Math.Round(daysDelay * 50.0,4),
+                     DateTime.Now,
+                     true,
+                     toolId,
+                     workerId,
+                     null);
+
+                var penaltyToolId = await _penaltiesService.CreatePenalty(penalty);
+            }
+            var rentalToolId = await _rentalsService
                 .UpdateRental(
                 workerId, 
                 toolId, 
@@ -74,7 +90,7 @@ namespace Storage.API.Controllers
         [HttpDelete("{workerId:guid}/{toolId:guid}")]
         public async Task<ActionResult<Guid>> DeleteRental(Guid workerId, Guid toolId)
         {
-            var rentalToolId = await _RentalsService.DeleteRental(workerId, toolId);
+            var rentalToolId = await _rentalsService.DeleteRental(workerId, toolId);
             return Ok(rentalToolId);
         }
     }

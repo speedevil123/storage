@@ -21,45 +21,7 @@ const RentalTable = () => {
         current: 1,
         pageSize: 10,
     });
-
     const [searchText, setSearchText] = useState(''); // Для поиска
-
-
-    // //ТЕСТОВЫЕ ДАННЫЕ
-    // const generateMockData = () => {
-    //     const workerNames = ['Иван Иванов', 'Анна Смирнова', 'Петр Петров', 'Ольга Сидорова', 'Дмитрий Кузнецов'];
-    //     const toolNames = ['Отвертка', 'Молоток', 'Гаечный ключ', 'Дрель', 'Шуруповерт'];
-    //     const statuses = ['Активен', 'Завершено', 'Просрочено']; // Добавить статус в массив
-
-
-    //     const mockData = Array.from({ length: 30 }, (_, index) => {
-    //         const randomWorker = workerNames[Math.floor(Math.random() * workerNames.length)];
-    //         const randomTool = toolNames[Math.floor(Math.random() * toolNames.length)];
-    //         const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-    //         const randomDate = formatDate(new Date(
-    //             Date.now() + Math.floor(Math.random() * 10 - 5) * 24 * 60 * 60 * 1000 // Дата может быть до или после текущей
-    //         ));
-
-    //         return {
-    //             key: `item-${index + 1}`,
-    //             workerName: randomWorker,
-    //             workerId: index + 1,
-    //             toolName: randomTool,
-    //             toolId: index + 1,
-    //             startDate: formatDate(new Date()), // Сегодняшняя дата
-    //             returnDate: randomStatus === 'Завершено' || randomStatus == 'Просрочено' ? randomDate : '',
-    //             endDate: randomStatus !== 'Неопределен' ? randomDate : '',
-    //             status: randomStatus,
-    //             toolQuantity: Math.floor(Math.random() * 10) + 1,
-    //         };
-    //     });
-
-    //     setDataSource(mockData);
-    // };
-
-    // useEffect(() => {
-    //     generateMockData(); // Генерация данных при загрузке компонента
-    // }, []);
 
     const filteredDataSource = dataSource.filter((item) =>
         Object.values(item).some(
@@ -74,9 +36,14 @@ const RentalTable = () => {
         if (
             !record.workerName || record.workerName.trim() === '' ||
             !record.toolName || record.toolName.trim() === '' ||
-            !record.toolQuantity || isNaN(record.toolQuantity || record.toolQuantity <= 0)) 
+            !record.toolQuantity) 
         {
-            errors.push('Пожалуйста заполните все поля!');
+            console.log(record.toolQuantity);
+            errors.push('Пожалуйста заполните все поля');
+        }
+        if(record.toolQuantity <= 0)
+        {
+            errors.push('Количество взятого инструмента не может быть отрицательным');
         }
         // if(!record.endDate || new Date(record.endDate) < new Date())
         // {
@@ -101,7 +68,10 @@ const RentalTable = () => {
         if (!record) return;
     
         const errors = validateRow(record);
-    
+        if (record.toolQuantity > record.availableQuantity) {
+            errors.push('Количество инструментов превышает доступное на складе.');
+        }
+
         if (errors.length > 0) {
             message.error(errors.map((error) => <p style={{margin: '0', textAlign: 'left'}}>{error}</p>));
             return;
@@ -126,6 +96,7 @@ const RentalTable = () => {
                     item.key === key ? {...item, ...newRental, key: item.key} : item
                 )
             );
+            message.success("Аренда успешно добавлена")
         }
         else
         {
@@ -151,7 +122,7 @@ const RentalTable = () => {
             startDate: record.startDate,
             returnDate: today,
             endDate: record.endDate,
-            status: isOverdue ? 'Просрочено' : 'Завершено',
+            status: isOverdue === 1 ? 'Просрочено' : 'Завершено',
             toolQuantity: record.toolQuantity
         }
 
@@ -164,6 +135,7 @@ const RentalTable = () => {
                     item.key === key ? {...item, ...rentalToUpdate, key: item.key}: item
                 )
             );
+            isOverdue === 1 ? message.warning("Аренда просрочена!") : message.success("Аренда успешно завершена");
         }
         else
         {
@@ -194,7 +166,7 @@ const RentalTable = () => {
         if(rentalId)
         {
             setDataSource((prevData) => prevData.filter((item) => item.key !== key));
-            message.success("Аренда успешно удалена");
+            message.info("Аренда успешно удалена");
         }
         else
         {
@@ -385,25 +357,39 @@ const RentalTable = () => {
                         updateField(record.key, 'filteredTools', filteredTools);
                         updateField(record.key, 'toolName', searchText);
                     }}
-                    options={(record.filteredTools || tools).map(tool => ({
-                        value: tool.id,
-                        label: `${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName} ${tool.quantity} шт.`,
-                    }))}
+                    options={(record.filteredTools || tools).map(tool => {
+                        const takenQuantity = dataSource
+                            .filter((rental) => rental.toolId === tool.id && rental.status === 'Активен')
+                            .reduce((sum, rental) => sum + rental.toolQuantity, 0);
+                        const availableQuantity = tool.quantity - takenQuantity;
+        
+                        return {
+                            value: tool.id,
+                            label: `(${availableQuantity} шт.) ${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`,
+                        };
+                    })}
                     onSelect={(value) => {
                         const selectedTool = tools.find(tool => tool.id === value);
                         if (selectedTool) {
+                            const takenQuantity = dataSource
+                                .filter((rental) => rental.toolId === selectedTool.id && rental.status === 'Активен')
+                                .reduce((sum, rental) => sum + rental.toolQuantity, 0);
+                            const availableQuantity = selectedTool.quantity - takenQuantity;
+        
                             updateField(record.key, 'toolId', selectedTool.id);
                             updateField(record.key, 'toolName', `${selectedTool.categoryName} ${selectedTool.modelName} - ${selectedTool.manufacturerName}`);
+                            updateField(record.key, 'availableQuantity', availableQuantity);
                         }
                     }}
+                    dropdownStyle={{ minWidth: '350px' }} // Установите ширину выпадающего списка
                     style={{ width: '100%' }}
                     placeholder="Введите название инструмента"
                 />
-            ) : (
-                <Input type="text" value={record.toolName || ''} readOnly style={readOnlyStyle} />
-            )
+                ) : (
+                    <Input type="text" value={record.toolName || ''} readOnly style={readOnlyStyle} />
+                )
             ),
-        },
+        },        
         {
             title: 'Дата Взят',
             dataIndex: 'startDate',

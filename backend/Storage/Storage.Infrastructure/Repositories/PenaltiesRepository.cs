@@ -14,7 +14,7 @@ namespace Storage.Infrastructure.Repositories
 {
     public class PenaltiesRepository : IPenaltiesRepository
     {
-        private readonly StorageDbContext _context;
+        private readonly StorageDbContext _context; 
         public PenaltiesRepository(StorageDbContext context)
         {
             _context = context;
@@ -42,6 +42,8 @@ namespace Storage.Infrastructure.Repositories
                 Id = penalty.Id,
                 Fine = penalty.Fine,
                 PenaltyDate = penalty.PenaltyDate,
+                IsPaidOut = penalty.IsPaidOut,
+
                 ToolId = penalty.ToolId,
                 WorkerId = penalty.WorkerId,
                 Rental = rental
@@ -89,7 +91,7 @@ namespace Storage.Infrastructure.Repositories
             return penaltyEntities.Select(MapToDomain).ToList();    
         }
 
-        public async Task<Guid> Update(Guid id, double fine, DateTime penaltyDate, Guid toolId, Guid workerId)
+        public async Task<Guid> Update(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid toolId, Guid workerId)
         {
             var rental = await _context.Rentals
                 .Include(r => r.Worker)
@@ -113,6 +115,7 @@ namespace Storage.Infrastructure.Repositories
             }
 
             penaltyToUpdate.PenaltyDate = penaltyDate;
+            penaltyToUpdate.IsPaidOut = isPaidOut;
             penaltyToUpdate.Fine = fine;
             penaltyToUpdate.ToolId = toolId;
             penaltyToUpdate.WorkerId = workerId;
@@ -134,6 +137,7 @@ namespace Storage.Infrastructure.Repositories
                 entity.Id,
                 entity.Fine,
                 entity.PenaltyDate,
+                entity.IsPaidOut,
                 entity.ToolId,
                 entity.WorkerId,
                 rental);

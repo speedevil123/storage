@@ -126,6 +126,11 @@ namespace Storage.Infrastructure.Migrations
                         .HasColumnType("float")
                         .HasDefaultValue(0.0);
 
+                    b.Property<bool>("IsPaidOut")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
                     b.Property<DateTime>("PenaltyDate")
                         .HasColumnType("datetime2");
 

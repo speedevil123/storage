@@ -22,6 +22,10 @@ namespace Storage.Infrastructure.Configurations
             builder.Property(p => p.PenaltyDate)
                 .IsRequired();
 
+            builder.Property(p => p.IsPaidOut)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             builder.HasOne(p => p.Rental)
                 .WithMany(r => r.Penalties)
                 .HasForeignKey(p => new {p.ToolId, p.WorkerId })

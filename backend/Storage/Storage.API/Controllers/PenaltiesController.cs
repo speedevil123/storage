@@ -26,6 +26,7 @@ namespace Storage.API.Controllers
                 p.Id,
                 p.Fine,
                 p.PenaltyDate,
+                p.IsPaidOut,
                 p.Rental.WorkerId,
                 p.Rental.ToolId,
                 p.Rental.Worker.Name,

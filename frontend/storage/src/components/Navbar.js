@@ -34,6 +34,11 @@ const Navbar = () => {
                             Статистика
                         </a>
                     </li>
+                    <li>
+                        <a href="/ManageTables" className={location.pathname === '/ManageTables' ? 'active' : ''}>
+                            Управление
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div className="navbar-right">

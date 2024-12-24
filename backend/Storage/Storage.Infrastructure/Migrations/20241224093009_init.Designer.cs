@@ -12,7 +12,7 @@ using Storage.DataAccess;
 namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageDbContext))]
-    [Migration("20241220030423_init")]
+    [Migration("20241224093009_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -128,6 +128,11 @@ namespace Storage.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("float")
                         .HasDefaultValue(0.0);
+
+                    b.Property<bool>("IsPaidOut")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("PenaltyDate")
                         .HasColumnType("datetime2");

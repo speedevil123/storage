@@ -11,6 +11,7 @@ namespace Storage.Infrastructure.Entities
         public Guid Id { get; set; }
         public double Fine { get; set; }
         public DateTime PenaltyDate { get; set; }
+        public bool IsPaidOut {  get; set; }
 
         public Guid ToolId { get; set; }
         public Guid WorkerId { get; set; }
