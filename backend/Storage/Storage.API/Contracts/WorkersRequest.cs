@@ -6,7 +6,6 @@
         string Position,
         string Email,
         string PhoneNumber,
-        DateTime RegistrationDate,
-        Guid DepartmentId,
-        string DepartmentName);
+        string RegistrationDate,
+        Guid DepartmentId);
 }

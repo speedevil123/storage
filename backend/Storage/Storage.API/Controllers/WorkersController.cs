@@ -61,7 +61,7 @@ namespace Storage.API.Controllers
                 request.Position,
                 request.Email,
                 request.PhoneNumber,
-                request.RegistrationDate,
+                Convert.ToDateTime(request.RegistrationDate),
                 request.DepartmentId);
 
             return Ok(workerId);

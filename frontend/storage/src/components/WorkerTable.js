@@ -44,7 +44,7 @@ const WorkerTable = () => {
 
     const getWorkers = async () => {
         try {
-            const workersData = await GETRequest('/Models');
+            const workersData = await GETRequest('/Workers');
             const workerRows = workersData.map((worker) => ({
                 key: worker.id,
                 name: worker.name,
@@ -158,7 +158,7 @@ const WorkerTable = () => {
             registrationDate: record.registrationDate,
             departmentId: record.departmentId
         };
-        const workerId = await PUTRequest(`/Models/${record.key}`, workerToUpdate);
+        const workerId = await PUTRequest(`/Workers/${record.key}`, workerToUpdate);
 
         if (workerId) 
         {
@@ -332,11 +332,11 @@ const WorkerTable = () => {
           title: 'Отдел',
           dataIndex: 'department',
           key: 'department',
-          sorter: (a, b) => a.department.localeCompare(b.department),
+          sorter: (a, b) => a.departmentName.localeCompare(b.departmentName),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
                 <AutoComplete
-                  value={record.department || ''}
+                  value={record.departmentName || ''}
                   onSearch={(searchText) => {
                       const filteredDepartments = departments.filter(department =>
                         `${department.name} (${department.address})`
@@ -357,7 +357,7 @@ const WorkerTable = () => {
                           updateField(record.key, 'departmentName', selectedDepartment.name);
                       }
                   }}
-                  style={{ width: '100%' }}
+                  style={{ width: '300px' }}
                   placeholder="Выберите отдел"
                 />
               ) : (
@@ -402,7 +402,7 @@ const WorkerTable = () => {
 
     return (
         <div>
-          <h2>Модели инструментов</h2>
+          <h2>Работники производства</h2>
             <div style={{ marginBottom: '10px', display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <Button
                     type="primary"

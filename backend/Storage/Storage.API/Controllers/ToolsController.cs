@@ -38,7 +38,7 @@ namespace Storage.Controllers
         public async Task<ActionResult> CreateTool([FromBody] ToolsRequest request)
         {
             var tool = new Tool(
-                Guid.NewGuid(),
+                request.Id,
                 request.ModelId,
                 request.ManufacturerId,
                 request.Quantity,

@@ -4,7 +4,5 @@
         Guid Id,
         Guid ModelId,
         Guid ManufacturerId,
-        int Quantity,
-        string ModelName,
-        string ManufacturerName);
+        int Quantity);
 }
