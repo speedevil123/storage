@@ -36,7 +36,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateDepartments([FromBody] DepartmentsRequest request)
         {
             var department = new Department(
-                Guid.NewGuid(),
+                request.Id,
                 request.Name,
                 request.phoneNumber,
                 request.Email,
@@ -50,7 +50,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult<Guid>> UpdateDepartment(Guid id, [FromBody] DepartmentsRequest request)
         {
             var departmentId = await _departmentsService
-                .UpdateDepartment(request.Id, request.Name, request.phoneNumber, request.Email, request.Address);
+                .UpdateDepartment(id, request.Name, request.phoneNumber, request.Email, request.Address);
             return Ok(departmentId);
         }
 

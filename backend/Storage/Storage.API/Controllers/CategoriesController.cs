@@ -31,7 +31,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateCategory([FromBody] CategoriesRequest request)
         {
             var category = new Category(
-                Guid.NewGuid(),
+                request.Id,
                 request.Name);
 
             await _categoriesService.CreateCategory(category);

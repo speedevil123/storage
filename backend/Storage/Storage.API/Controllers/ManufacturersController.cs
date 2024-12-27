@@ -35,7 +35,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateManufacturer([FromBody] ManufacturersRequest request)
         {
             var manufacturer = new Manufacturer(
-                Guid.NewGuid(),
+                request.Id,
                 request.Name,
                 request.phoneNumber,
                 request.Email,

@@ -39,17 +39,16 @@ const RentalTable = () => {
             !record.toolQuantity ||
             !record.endDate) 
         {
-            console.log(record.toolQuantity);
             errors.push('Пожалуйста заполните все поля');
         }
         if(record.toolQuantity <= 0)
         {
             errors.push('Количество взятого инструмента не может быть отрицательным');
         }
-        // if(!record.endDate || new Date(record.endDate) < new Date())
-        // {
-        //     errors.push('Дата возврата должна быть позже даты взятия.')
-        // }
+        if(!record.endDate || new Date(record.endDate) < new Date())
+        {
+            errors.push('Дата возврата должна быть позже даты взятия.')
+        }
         return errors;
     };
 

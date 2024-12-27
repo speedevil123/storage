@@ -1,11 +1,11 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import ToolTable from './TablesToMange/ToolTable';
-import WorkerTable from './TablesToMange/WorkerTable';
-import DepartmentTable from './TablesToMange/DepartmentTable';
-import ModelTable from './TablesToMange/ModelTable';
-import CategoryTable from './TablesToMange/CategoryTable';
-import ManufacturerTable from './TablesToMange/ManufacturerTable';
+import ToolTable from './ToolTable';
+import WorkerTable from './WorkerTable';
+import DepartmentTable from './DepartmentTable';
+import ModelTable from './ModelTable';
+import CategoryTable from './CategoryTable';
+import ManufacturerTable from './ManufacturerTable';
 
 const { TabPane } = Tabs; // Деструктурируем TabPane из Tabs
 

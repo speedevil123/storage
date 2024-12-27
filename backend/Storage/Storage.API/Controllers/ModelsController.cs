@@ -33,7 +33,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateModel([FromBody] ModelsRequest request)
         {
             var model = new Model(
-                Guid.NewGuid(),
+                request.Id,
                 request.Name,
                 request.CategoryId,
                 null);
@@ -43,10 +43,10 @@ namespace Storage.API.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<ActionResult<Guid>> UpdateModel(Guid id, string name, Guid categoryId)
+        public async Task<ActionResult<Guid>> UpdateModel(Guid id, [FromBody] ModelsRequest request)
         {
             var modelId = await _modelsService
-                .UpdateModel(id, name, categoryId);
+                .UpdateModel(id, request.Name, request.CategoryId);
             return Ok(modelId);
         }
 

@@ -20,7 +20,7 @@ const App = () => {
                 <Route path="/Help" element={<Help />} />
                 <Route path="/Statistics" element={<Statistics />} /> */}
                 <Route path="/ManageTables" element={
-                    <div style={{margin: '50px 150px'}}>
+                    <div style={{margin: '25px 200px'}}>
                         <ManageTables/>
                     </div>}/>
             </Routes>

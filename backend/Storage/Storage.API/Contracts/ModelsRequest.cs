@@ -3,6 +3,6 @@
     public record ModelsRequest(
         Guid Id,
         string Name,
-        Guid CategoryId,
-        string CategoryName);
+        Guid CategoryId
+        );
 }
