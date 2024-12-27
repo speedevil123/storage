@@ -59,15 +59,17 @@ const ToolTable = () => {
                 key: tool.id,
                 quantity: tool.quantity,
                 modelId: tool.modelId,
-                manufacturerId: tool.manufacturerId
+                manufacturerId: tool.manufacturerId,
+                modelName: tool.modelName,
+                manufacturerName: tool.manufacturerName
             }))
             setDataSource(toolsRows);
         } catch (error) {
             message.error('Ошибка загрузки инструментов.');
         }
     };
-
     useEffect(() => {
+        setAddingKey(false);
         getModels();
         getManufacturers();
         getTools();
@@ -77,7 +79,7 @@ const ToolTable = () => {
         const errors = []; 
         if (!record.modelName || record.modelName.trim() === '' ||
             !record.manufacturerName || record.manufacturerName.trim() === '' ||
-            !record.quantity || record.quantity.trim() === ''
+            !record.quantity
             )
         {
             errors.push('Пожалуйста заполните все поля');
@@ -86,15 +88,13 @@ const ToolTable = () => {
         {
             errors.push('Количество не может быть меньше или равно 0');
         }
-        if (filteredDataSource.some(worker => 
-            worker.name === record.name &&
-            worker.phoneNumber === record.phoneNumber &&
-            worker.email === record.email &&
-            worker.departmentName === record.departmentName &&
-            worker.key !== record.key
+        if (filteredDataSource.some(tool => 
+            tool.modelName === record.modelName &&
+            tool.manufacturerName === record.manufacturerName &&
+            tool.key !== record.key
             ))
         {
-            errors.push('Данный работник уже существует');
+            errors.push('Данный инструмент уже существует');
         }
         return errors;
     };
@@ -237,7 +237,14 @@ const ToolTable = () => {
         backgroundColor: '#f5f5f5',
         cursor: 'not-allowed',
         border: '1px solid #d9d9d9',
-        width: '200px' 
+        width: '350px' 
+    };
+
+    const readOnlyQuantityStyle = {
+        backgroundColor: '#f5f5f5',
+        cursor: 'not-allowed',
+        border: '1px solid #d9d9d9',
+        width: '100px' 
     };
 
     const columns = [
@@ -253,8 +260,12 @@ const ToolTable = () => {
         },
         {
           title: 'Модель',
-          dataIndex: 'model',
-          key: 'model',
+          dataIndex: 'modelName',
+          key: 'modelName',
+          filters: [
+            ...new Set(dataSource.map((item) => item.modelName)),
+            ].map((modelName) => ({ text: modelName, value: modelName })),
+          onFilter: (value, record) => record.modelName.includes(value),
           sorter: (a, b) => a.modelName.localeCompare(b.modelName),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
@@ -262,16 +273,14 @@ const ToolTable = () => {
                   value={record.modelName || ''}
                   onSearch={(searchText) => {
                       const filteredModels = models.filter(model =>
-                        `${model.name}`
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase())
+                        model.name.toLowerCase().includes(searchText.toLowerCase())
                       );
                       updateField(record.key, 'filteredModels', filteredModels);
                       updateField(record.key, 'modelName', searchText);
                   }}
                   options={(record.filteredModels || models).map(model => ({
                       value: model.id,
-                      label: `${model.name}`,
+                      label: model.name,
                   }))}
                   onSelect={(value) => {
                       const selectedModel = models.find((model) => model.id === value);
@@ -280,7 +289,7 @@ const ToolTable = () => {
                           updateField(record.key, 'modelName', selectedModel.name);
                       }
                   }}
-                  style={{ width: '300px' }}
+                  style={{ width: '350px' }}
                   placeholder="Выберите модель"
                 />
               ) : (
@@ -289,8 +298,12 @@ const ToolTable = () => {
         },
         {
           title: 'Производитель',
-          dataIndex: 'manufacturer',
-          key: 'manufacturer',
+          dataIndex: 'manufacturerName',
+          key: 'manufacturerName',
+          filters: [
+            ...new Set(dataSource.map((item) => item.manufacturerName)),
+            ].map((manufacturerName) => ({ text: manufacturerName, value: manufacturerName })),
+          onFilter: (value, record) => record.manufacturerName.includes(value),
           sorter: (a, b) => a.manufacturerName.localeCompare(b.manufacturerName),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
@@ -316,7 +329,7 @@ const ToolTable = () => {
                           updateField(record.key, 'manufacturerName', selectedManufacturer.name);
                       }
                   }}
-                  style={{ width: '300px' }}
+                  style={{ width: '350px' }}
                   placeholder="Выберите производителя"
                 />
               ) : (
@@ -327,20 +340,21 @@ const ToolTable = () => {
             title: 'Общее количество',
             dataIndex: 'quantity',
             key: 'quantity',
-            sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+            width: 100,
+            sorter: (a, b) => a.quantity - b.quantity,
             render: (text, record) =>
                 editingKey === record.key || addingKey === record.key ? (
                     <Input
+                        type = 'number'
                         value = {record.quantity}
                         onChange={(e) => {
                             updateField(record.key, 'quantity', e.target.value);
                         }}
                         value={record.quantity || ''}
-                        style={{ width: '100%' }}
-                        placeholder="(Пример: СюткинНЮ)"
+                        style={{ width: '100px' }}
                     />
                 ) : (
-                    <Input type="text" value={record.quantity || ''} readOnly style={readOnlyStyle} />
+                    <Input type="text" value={record.quantity || ''} readOnly style={readOnlyQuantityStyle} />
                 )
         },
         {

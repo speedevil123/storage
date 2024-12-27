@@ -51,13 +51,25 @@ const WorkerTable = () => {
                 position: worker.position,
                 email: worker.email,
                 phoneNumber: worker.phoneNumber,
-                registrationDate: worker.registrationDate,
-                departmentId: worker.departmentId
+                registrationDate: formatDate(worker.registrationDate),
+                departmentId: worker.departmentId,
+                departmentName: worker.departmentName
             }))
             setDataSource(workerRows);
         } catch (error) {
             message.error('Ошибка загрузки работников.');
         }
+    };
+
+    const formatDate = (date) => {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        const hour = d.getHours();
+        const minute = d.getMinutes();
+        const seconds = d.getSeconds();
+        return `${day}.${month}.${year} ${hour}:${minute}:${seconds}`;
     };
 
     useEffect(() => {
@@ -225,7 +237,7 @@ const WorkerTable = () => {
             position: '',
             email: '',
             phoneNumber: '',
-            registrationDate: '',
+            registrationDate: formatDate(new Date()),
             departmentId: null,
             departmentName: ''
         };
@@ -276,6 +288,10 @@ const WorkerTable = () => {
           title: 'Позиция',
           dataIndex: 'position',
           key: 'position',
+          filters: [
+            ...new Set(dataSource.map((item) => item.position)),
+            ].map((position) => ({ text: position, value: position })),
+          onFilter: (value, record) => record.position.includes(value),
           sorter: (a, b) => a.position.localeCompare(b.position),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
@@ -316,7 +332,6 @@ const WorkerTable = () => {
           title: 'Номер телефона',
           dataIndex: 'phoneNumber',
           key: 'phoneNumber',
-          sorter: (a, b) => a.phoneNumber.localeCompare(b.phoneNumber),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
                   <Input
@@ -338,12 +353,16 @@ const WorkerTable = () => {
           key: 'registrationDate',
           sorter: (a, b) => a.registrationDate.localeCompare(b.registrationDate),
           render: (text, record) =>
-                  <Input type="text" value={new Date() || ''} readOnly style={readOnlyStyle} />
+                  <Input type="text" value={record.registrationDate || ''} readOnly style={readOnlyStyle} />
         },
         {
           title: 'Отдел',
-          dataIndex: 'department',
-          key: 'department',
+          dataIndex: 'departmentName',
+          key: 'departmentName',
+          filters: [
+            ...new Set(dataSource.map((item) => item.departmentName)),
+            ].map((departmentName) => ({ text: departmentName, value: departmentName })),
+          onFilter: (value, record) => record.departmentName.includes(value),
           sorter: (a, b) => a.departmentName.localeCompare(b.departmentName),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (

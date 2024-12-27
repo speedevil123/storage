@@ -49,6 +49,7 @@ const ManufacturerTable = () => {
     };
 
     useEffect(() => {
+        setAddingKey(false);
         getManufacturers();
     }, []);
 

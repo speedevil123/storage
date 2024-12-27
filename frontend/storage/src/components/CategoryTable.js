@@ -46,6 +46,7 @@ const CategoriesTable = () => {
     };
 
     useEffect(() => {
+        setAddingKey(false);
         getCategories();
     }, []);
 

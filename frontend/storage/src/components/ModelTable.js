@@ -58,6 +58,7 @@ const ModelTable = () => {
     };
 
     useEffect(() => {
+        setAddingKey(false);
         getModels();
         getCategories();
     }, []);
@@ -255,6 +256,10 @@ const ModelTable = () => {
           title: 'Категория',
           dataIndex: 'categoryName',
           key: 'categoryName',
+          filters: [
+            ...new Set(dataSource.map((item) => item.categoryName)),
+            ].map((categoryName) => ({ text: categoryName, value: categoryName })),
+          onFilter: (value, record) => record.categoryName.includes(value),
           sorter: (a, b) => a.categoryName.localeCompare(b.categoryName),
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (

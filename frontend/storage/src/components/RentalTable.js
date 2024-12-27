@@ -317,7 +317,7 @@ const RentalTable = () => {
                         }}
                         options={(record.filteredWorkers || workers).map(worker => ({
                             value: worker.id,
-                            label: worker.name,
+                            label: `${worker.name} (${worker.departmentName})`,
                         }))}
                         onSelect={(value) => {
                             const selectedWorker = workers.find((worker) => worker.id === value);

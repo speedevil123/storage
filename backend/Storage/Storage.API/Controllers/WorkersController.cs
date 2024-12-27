@@ -43,7 +43,7 @@ namespace Storage.API.Controllers
                 request.Position,
                 request.Email,
                 request.PhoneNumber,
-                DateTime.Now,
+                Convert.ToDateTime(request.RegistrationDate),
                 request.DepartmentId,
                 null);
 

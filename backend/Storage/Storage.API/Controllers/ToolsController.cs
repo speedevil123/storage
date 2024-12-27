@@ -53,7 +53,7 @@ namespace Storage.Controllers
         public async Task<ActionResult<Guid>> UpdateTool(Guid id, [FromBody] ToolsRequest request)
         {
             var toolId = await _toolsService
-                .UpdateTool(request.Id, request.Quantity, request.ModelId, request.ManufacturerId);
+                .UpdateTool(id, request.Quantity, request.ModelId, request.ManufacturerId);
             return Ok(toolId);
         }
 

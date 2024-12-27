@@ -48,6 +48,7 @@ const DepartmentTable = () => {
     };
 
     useEffect(() => {
+        setAddingKey(false);
         getDepartments();
     }, []);
 
