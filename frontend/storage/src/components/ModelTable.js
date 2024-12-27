@@ -64,13 +64,19 @@ const ModelTable = () => {
 
     const validateRow = (record) => {   
         const errors = []; 
-        if (!record.name || record.name.trim() === '')
+        if (!record.name || record.name.trim() === '' ||
+            !record.categoryName || record.categoryName.trim() === ''
+            )
         {
             errors.push('Пожалуйста заполните все поля');
         }
-        if (filteredDataSource.some(model => model.name === record.name && model.key !== model.key))
+        if (filteredDataSource.some(model => 
+            model.name === record.name &&
+            model.categoryName === record.categoryName &&
+            model.key !== record.key
+            ))
         {
-            errors.push('Модель с таким названием уже существует');
+            errors.push('Данная модель инструмента уже существует');
         }
         return errors;
     };

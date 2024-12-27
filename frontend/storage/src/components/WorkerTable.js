@@ -61,23 +61,35 @@ const WorkerTable = () => {
     };
 
     useEffect(() => {
+        setAddingKey(false);
         getDepartments();
         getWorkers();
     }, []);
 
     const validateRow = (record) => {   
         const errors = []; 
-        // if (!record.name || record.name.trim() === '')
-        // {
-        //     errors.push('Пожалуйста заполните все поля');
-        // }
-        // if (filteredDataSource.some(model => model.name === record.name && model.key !== model.key))
-        // {
-        //     errors.push('Работник с таким названием уже существует');
-        // }
+        if (!record.name || record.name.trim() === '' ||
+            !record.position || record.position.trim() === '' ||
+            !record.phoneNumber || record.phoneNumber.trim() === '' ||
+            !record.email || record.email.trim() === '' ||
+            !record.departmentName || record.departmentName.trim() === ''
+            )
+        {
+            errors.push('Пожалуйста заполните все поля');
+        }
+        if (filteredDataSource.some(worker => 
+            worker.name === record.name &&
+            worker.phoneNumber === record.phoneNumber &&
+            worker.email === record.email &&
+            worker.departmentName === record.departmentName &&
+            worker.key !== record.key
+            ))
+        {
+            errors.push('Данный работник уже существует');
+        }
         return errors;
     };
-
+    
     const updateField = (key, field, value) => {
         setDataSource((prevData) =>
             prevData.map((item) =>

@@ -52,17 +52,25 @@ const ManufacturerTable = () => {
         getManufacturers();
     }, []);
 
-
-    //сделать 
     const validateRow = (record) => {   
         const errors = []; 
-        if (!record.name || record.name.trim() === '')
+        if (!record.name || record.name.trim() === '' ||
+            !record.phoneNumber || record.phoneNumber.trim() === '' ||
+            !record.email || record.email.trim() === '' ||
+            !record.country || record.country.trim() === '' ||
+            !record.postIndex || record.postIndex.trim() === ''
+            )
         {
             errors.push('Пожалуйста заполните все поля');
         }
-        if (filteredDataSource.some(manufacturer => manufacturer.name === record.name && manufacturer.key !== record.key))
+        if (filteredDataSource.some(manufacturer => 
+            manufacturer.name === record.name &&
+            manufacturer.phoneNumber === record.phoneNumber &&
+            manufacturer.email === record.email &&
+            manufacturer.key !== record.key
+            ))
         {
-            errors.push('Производитель с таким названием уже существует');
+            errors.push('Данный производитель уже существует');
         }
         return errors;
     };

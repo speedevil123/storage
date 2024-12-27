@@ -52,19 +52,29 @@ const DepartmentTable = () => {
     }, []);
 
 
-    //сделать 
     const validateRow = (record) => {   
         const errors = []; 
-        if (!record.name || record.name.trim() === '')
+        if (!record.name || record.name.trim() === '' ||
+            !record.phoneNumber || record.phoneNumber.trim() === '' ||
+            !record.email || record.email.trim() === '' ||
+            !record.address || record.address.trim() === ''
+            )
         {
             errors.push('Пожалуйста заполните все поля');
         }
-        if (filteredDataSource.some(department => department.name === record.name && department.key !== record.key))
+        if (filteredDataSource.some(department => 
+            department.name === record.name &&
+            department.phoneNumber === record.phoneNumber &&
+            department.email === record.email &&
+            department.address === record.address &&
+            department.key !== record.key
+            ))
         {
-            errors.push('Отдел с таким названием уже существует');
+            errors.push('Данный отдел уже существует');
         }
         return errors;
     };
+
 
     const updateField = (key, field, value) => {
         setDataSource((prevData) =>

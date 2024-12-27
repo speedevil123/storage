@@ -75,14 +75,27 @@ const ToolTable = () => {
 
     const validateRow = (record) => {   
         const errors = []; 
-        // if (!record.name || record.name.trim() === '')
-        // {
-        //     errors.push('Пожалуйста заполните все поля');
-        // }
-        // if (filteredDataSource.some(model => model.name === record.name && model.key !== model.key))
-        // {
-        //     errors.push('Работник с таким названием уже существует');
-        // }
+        if (!record.modelName || record.modelName.trim() === '' ||
+            !record.manufacturerName || record.manufacturerName.trim() === '' ||
+            !record.quantity || record.quantity.trim() === ''
+            )
+        {
+            errors.push('Пожалуйста заполните все поля');
+        }
+        if(record.quantity <= 0)
+        {
+            errors.push('Количество не может быть меньше или равно 0');
+        }
+        if (filteredDataSource.some(worker => 
+            worker.name === record.name &&
+            worker.phoneNumber === record.phoneNumber &&
+            worker.email === record.email &&
+            worker.departmentName === record.departmentName &&
+            worker.key !== record.key
+            ))
+        {
+            errors.push('Данный работник уже существует');
+        }
         return errors;
     };
 

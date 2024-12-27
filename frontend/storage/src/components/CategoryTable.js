@@ -51,13 +51,17 @@ const CategoriesTable = () => {
 
     const validateRow = (record) => {   
         const errors = []; 
-        if (!record.name || record.name.trim() === '')
+        if (!record.name || record.name.trim() === ''
+            )
         {
             errors.push('Пожалуйста заполните все поля');
         }
-        if (filteredDataSource.some(category => category.name === record.name && category.key !== record.key))
+        if (filteredDataSource.some(category => 
+            category.name === record.name &&
+            category.key !== record.key
+            ))
         {
-            errors.push('Категория с таким названием уже существует');
+            errors.push('Данная категория уже существует');
         }
         return errors;
     };
