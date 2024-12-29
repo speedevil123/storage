@@ -67,7 +67,7 @@ namespace Storage.API.Controllers
                     Guid.NewGuid(),
                      Math.Round(daysDelay * 50.0,4),
                      DateTime.Now,
-                     true,
+                     false,
                      toolId,
                      workerId,
                      null);

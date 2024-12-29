@@ -243,7 +243,6 @@ const DepartmentTable = () => {
             render: (text, record) =>
                 editingKey === record.key || addingKey === record.key ? (
                     <Input
-                        value = {record.name}
                         onChange={(e) => {
                             updateField(record.key, 'name', e.target.value);
                         }}
@@ -262,7 +261,6 @@ const DepartmentTable = () => {
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
                   <Input
-                      value = {record.phoneNumber}
                       onChange={(e) => {
                           updateField(record.key, 'phoneNumber', e.target.value);
                       }}
@@ -281,7 +279,6 @@ const DepartmentTable = () => {
           render: (text, record) =>
               editingKey === record.key || addingKey === record.key ? (
                   <Input
-                      value = {record.email}
                       onChange={(e) => {
                           updateField(record.key, 'email', e.target.value);
                       }}
@@ -301,7 +298,6 @@ const DepartmentTable = () => {
         render: (text, record) =>
             editingKey === record.key || addingKey === record.key ? (
                 <Input
-                    value = {record.address}
                     onChange={(e) => {
                         updateField(record.key, 'address', e.target.value);
                     }}

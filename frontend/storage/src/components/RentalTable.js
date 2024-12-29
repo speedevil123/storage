@@ -2,9 +2,10 @@ import React from 'react';
 import { AutoComplete, Button, Table, Input } from 'antd';
 import { useEffect, useState } from 'react';
 import { DELETERequest, GETRequest, POSTRequest, PUTRequest } from '../request';
-import { CheckOutlined, CheckCircleOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckOutlined, CheckCircleOutlined, DeleteOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { message } from 'antd';
+import PenaltyDetailsModal from './PenaltyDetailModal';
 
 message.config({
     duration: 3, 
@@ -12,6 +13,11 @@ message.config({
 });
 
 const RentalTable = () => {
+    //penalty logic
+    const [isPenaltyModalVisible, setPenaltyModalVisible] = useState(false);
+    const [penaltyDetails, setPenaltyDetails] = useState([]);
+    const [selectedRecord, setSelectedRecord] = useState(null);
+
     const [workers, setWorkers] = useState([]);
     const [tools, setTools] = useState([]);
     const [dataSource, setDataSource] = useState([]);
@@ -23,6 +29,25 @@ const RentalTable = () => {
     });
     const [searchText, setSearchText] = useState(''); // Для поиска
 
+    const handleViewPenaltyDetails = (record) => {
+        setSelectedRecord(record);
+        const rentalId = `${record.workerId}/${record.toolId}`;
+        getPenaltyById(rentalId); // Загрузка данных о просрочке
+    };
+
+    const getPenaltyById = async (rentalId) => {
+        try
+        {
+            const penaltyData = await GETRequest(`/Penalties/${rentalId}`);
+            setPenaltyDetails(penaltyData);
+            setPenaltyModalVisible(true);
+        }
+        catch(error)
+        {
+            console.error('Error fetching penalty by id:', error);
+        }
+    }
+
     const filteredDataSource = dataSource.filter((item) =>
         Object.values(item).some(
             (value) =>
@@ -32,8 +57,9 @@ const RentalTable = () => {
     );
 
     const validateRow = (record) => {   
+        console.log(dataSource);
         const errors = []; 
-        if (
+        if(
             !record.workerName || record.workerName.trim() === '' ||
             !record.toolName || record.toolName.trim() === '' ||
             !record.toolQuantity ||
@@ -45,9 +71,17 @@ const RentalTable = () => {
         {
             errors.push('Количество взятого инструмента не может быть отрицательным');
         }
-        if(!record.endDate || new Date(record.endDate) < new Date())
+        // if(!record.endDate || new Date(record.endDate) < new Date())
+        // {
+        //     errors.push('Дата возврата должна быть позже даты взятия.')
+        // }
+        if(record.toolQuantity > record.availableQuantity) {
+            errors.push('Количество инструментов превышает доступное на складе.');
+        }
+        if(dataSource.some((item) => item.workerId === record.workerId
+            && item.toolId === record.toolId && item.key !== record.key))
         {
-            errors.push('Дата возврата должна быть позже даты взятия.')
+            errors.push('Данная запись уже существует, переоформите аренду или дождитесь истечения текущей');
         }
         return errors;
     };
@@ -68,9 +102,6 @@ const RentalTable = () => {
         if (!record) return;
     
         const errors = validateRow(record);
-        if (record.toolQuantity > record.availableQuantity) {
-            errors.push('Количество инструментов превышает доступное на складе.');
-        }
 
         if (errors.length > 0) {
             message.error(errors.map((error) => <p style={{margin: '0', textAlign: 'left'}}>{error}</p>));
@@ -91,6 +122,7 @@ const RentalTable = () => {
     
         if(rentalId)
         {
+            console.log(rentalId);
             setDataSource((prevData) =>
                 prevData.map((item) =>
                     item.key === key ? {...item, ...newRental, key: item.key} : item
@@ -107,13 +139,6 @@ const RentalTable = () => {
     const handleComplete = (key) => {
         const record = dataSource.find((item) => item.key === key);
         if (!record) return;
-    
-        const errors = validateRow(record);
-    
-        if (errors.length > 0) {
-            message.error(`Ошибка: ${errors.join(' ')}`);
-            return;
-        }
     
         const today = formatDate(new Date());
         const isOverdue = compareFormattedDates(today, record.endDate);
@@ -177,7 +202,6 @@ const RentalTable = () => {
     };
 
     const showDeleteModal = (key) => {
-        console.log(key);
         setSelectedRowKey(key);
         setIsModalVisible(true);
     };
@@ -206,7 +230,6 @@ const RentalTable = () => {
         try {
             const toolsData = await GETRequest('/Tools');
             setTools(toolsData);
-            console.log(toolsData);
         } catch (error) {
             console.error('Error fetching tools:', error);
         }
@@ -357,20 +380,23 @@ const RentalTable = () => {
                         updateField(record.key, 'filteredTools', filteredTools);
                         updateField(record.key, 'toolName', searchText);
                     }}
-                    options={(record.filteredTools || tools).map(tool => {
-                        const takenQuantity = dataSource
-                            .filter((rental) => rental.toolId === tool.id && rental.status === 'Активен')
-                            .reduce((sum, rental) => sum + rental.toolQuantity, 0);
-                        const availableQuantity = tool.quantity - takenQuantity;
-                        
-                        if(availableQuantity > 0)
-                        {
-                            return {
-                                value: tool.id,
-                                label: `(${availableQuantity} шт.) ${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`,
-                            };
-                        }
-                    })}
+                    options={(record.filteredTools || tools)
+                        .map(tool => {
+                            const takenQuantity = dataSource
+                                .filter((rental) => rental.toolId === tool.id && rental.status === 'Активен')
+                                .reduce((sum, rental) => sum + rental.toolQuantity, 0);
+                            const availableQuantity = tool.quantity - takenQuantity;
+                    
+                            if (availableQuantity > 0) {
+                                return {
+                                    value: tool.id,
+                                    label: `(${availableQuantity} шт.) ${tool.categoryName} ${tool.modelName} - ${tool.manufacturerName}`,
+                                };
+                            }
+                            return undefined;
+                        })
+                        .filter(Boolean)}
+                    
                     onSelect={(value) => {
                         const selectedTool = tools.find(tool => tool.id === value);
                         if (selectedTool) {
@@ -504,6 +530,15 @@ const RentalTable = () => {
                             onClick={() => handleComplete(record.key)}
                         />
                     )}
+                    {record.status === 'Просрочено' && (
+                        <Button
+                            type="text"
+                            icon={<ExclamationCircleOutlined />}
+                            onClick={() => handleViewPenaltyDetails(record)}
+                        >
+                            Подробности
+                        </Button>
+                    )}
                     <Button
                         type="text"
                         danger
@@ -540,6 +575,11 @@ const RentalTable = () => {
                 visible={isModalVisible}
                 onConfirm={handleConfirmDelete}
                 onCancel={handleCancelModal}
+            />
+            <PenaltyDetailsModal
+                visible={isPenaltyModalVisible}
+                onClose={() => setPenaltyModalVisible(false)}
+                penaltyDetails={penaltyDetails}
             />
         </div>
     );

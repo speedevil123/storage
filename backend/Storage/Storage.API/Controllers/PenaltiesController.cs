@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Storage.API.Contracts;
 using Storage.Core.Abstractions;
+using Storage.Core.Models;
 using Storage.Infrastructure.Repositories;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -18,7 +19,7 @@ namespace Storage.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<PenaltiesRepository>>> GetPenalties()
+        public async Task<ActionResult<List<PenaltiesResponse>>> GetPenalties()
         {
             var penalties = await _penaltiesService.GetAllPenalties();
 
@@ -35,8 +36,35 @@ namespace Storage.API.Controllers
             return Ok(response);
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<Guid>> DeleteTool(Guid id)
+        [HttpGet("{workerId:guid}/{toolId:guid}")]
+        public async Task<ActionResult<PenaltiesResponse>> GetPenaltyById(Guid workerId, Guid toolId)
+        {
+            var penalty = await _penaltiesService.GetPenaltyById(workerId, toolId);
+
+            var response = new PenaltiesResponse(
+                penalty.Id,
+                penalty.Fine,
+                penalty.PenaltyDate,
+                penalty.IsPaidOut,
+                penalty.Rental.WorkerId,
+                penalty.Rental.ToolId,
+                penalty.Rental.Worker.Name,
+                $"{penalty.Rental.Tool.Model.Category.Name} {penalty.Rental.Tool.Model.Name}"
+            );
+
+            return Ok(response);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<Guid>> UpdatePenalty(Guid id, [FromBody] PenaltiesRequest request)
+        {
+            var penaltyId = await _penaltiesService
+                .UpdatePenalty(id, request.Fine, request.PenaltyDate, request.IsPaidOut, request.ToolId, request.WorkerId);
+            return Ok(penaltyId);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> DeletePenalty(Guid id)
         {
             var penaltyId = await _penaltiesService.DeletePenalty(id);
             return Ok(penaltyId);

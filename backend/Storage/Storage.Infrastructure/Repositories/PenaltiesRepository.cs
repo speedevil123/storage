@@ -20,6 +20,24 @@ namespace Storage.Infrastructure.Repositories
             _context = context;
         }
 
+
+        public async Task<Penalty> GetPenaltyById(Guid workerId, Guid toolId)
+        {
+            var penalty = await _context.Penalties
+                .Include(p => p.Rental)
+                    .ThenInclude(r => r.Worker)
+                .Include(p => p.Rental)
+                    .ThenInclude(r => r.Tool)
+                .FirstOrDefaultAsync(p => p.ToolId == toolId && p.WorkerId == workerId);
+
+            if(penalty == null)
+            {
+                throw new KeyNotFoundException($"PenaltyEntity with workerId {penalty.WorkerId} | toolId {penalty.ToolId} not found");
+            }
+
+            return (MapToDomain(penalty));
+        }
+
         public async Task<Guid> Create(Penalty penalty)
         {
             var rental = await _context.Rentals

@@ -28,7 +28,7 @@ namespace Storage.Infrastructure.Configurations
 
             builder.HasOne(p => p.Rental)
                 .WithMany(r => r.Penalties)
-                .HasForeignKey(p => new {p.ToolId, p.WorkerId })
+                .HasForeignKey(p => new { p.WorkerId, p.ToolId})
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

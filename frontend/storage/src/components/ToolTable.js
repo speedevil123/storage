@@ -346,7 +346,6 @@ const ToolTable = () => {
                 editingKey === record.key || addingKey === record.key ? (
                     <Input
                         type = 'number'
-                        value = {record.quantity}
                         onChange={(e) => {
                             updateField(record.key, 'quantity', e.target.value);
                         }}

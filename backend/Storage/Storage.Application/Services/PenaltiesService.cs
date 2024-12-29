@@ -30,6 +30,11 @@ namespace Storage.Application.Services
             return await _penaltiesRepository.Get();
         }
 
+        public async Task<Penalty> GetPenaltyById(Guid workerId, Guid toolId)
+        {
+            return await _penaltiesRepository.GetPenaltyById(workerId, toolId);
+        }
+
         public async Task<Guid> UpdatePenalty(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid toolId, Guid workerId)
         {
             return await _penaltiesRepository.Update(id, fine, penaltyDate,isPaidOut, toolId, workerId);

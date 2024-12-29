@@ -240,11 +240,10 @@ const ModelTable = () => {
             render: (text, record) =>
                 editingKey === record.key || addingKey === record.key ? (
                     <Input
-                        value = {record.name}
+                        value = {record.name || ''}
                         onChange={(e) => {
                             updateField(record.key, 'name', e.target.value);
                         }}
-                        value={record.name || ''}
                         style={{ width: '300px' }}
                         placeholder="Введите модель"
                     />
