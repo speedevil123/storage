@@ -15,11 +15,6 @@ const Navbar = () => {
             <div className="navbar-center">
                 <ul className="nav-links">
                     <li>
-                        <a href="/Contacts" className={location.pathname === '/Contacts' ? 'active' : ''}>
-                            Контакты
-                        </a>
-                    </li>
-                    <li>
                         <a href="/Help" className={location.pathname === '/Help' ? 'active' : ''}>
                             Помощь
                         </a>

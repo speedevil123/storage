@@ -28,6 +28,8 @@ namespace Storage.Infrastructure.Repositories
                     .ThenInclude(r => r.Worker)
                 .Include(p => p.Rental)
                     .ThenInclude(r => r.Tool)
+                        .ThenInclude(t => t.Model)
+                            .ThenInclude(m => m.Category)
                 .FirstOrDefaultAsync(p => p.ToolId == toolId && p.WorkerId == workerId);
 
             if(penalty == null)

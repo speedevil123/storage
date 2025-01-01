@@ -142,7 +142,7 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ToolId", "WorkerId");
+                    b.HasIndex("WorkerId", "ToolId");
 
                     b.ToTable("Penalties");
                 });
@@ -253,7 +253,7 @@ namespace Storage.Infrastructure.Migrations
                 {
                     b.HasOne("Storage.Infrastructure.Entities.RentalEntity", "Rental")
                         .WithMany("Penalties")
-                        .HasForeignKey("ToolId", "WorkerId")
+                        .HasForeignKey("WorkerId", "ToolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

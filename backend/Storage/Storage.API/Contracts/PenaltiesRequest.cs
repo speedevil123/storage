@@ -8,7 +8,5 @@ namespace Storage.API.Contracts
         DateTime PenaltyDate,
         bool IsPaidOut,
         Guid WorkerId,
-        Guid ToolId,
-        string WorkerName,
-        string Toolname);
+        Guid ToolId);
 }

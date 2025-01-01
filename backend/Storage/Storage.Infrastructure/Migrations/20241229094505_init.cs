@@ -166,8 +166,8 @@ namespace Storage.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Penalties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Penalties_Rentals_ToolId_WorkerId",
-                        columns: x => new { x.ToolId, x.WorkerId },
+                        name: "FK_Penalties_Rentals_WorkerId_ToolId",
+                        columns: x => new { x.WorkerId, x.ToolId },
                         principalTable: "Rentals",
                         principalColumns: new[] { "WorkerId", "ToolId" },
                         onDelete: ReferentialAction.Cascade);
@@ -179,9 +179,9 @@ namespace Storage.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Penalties_ToolId_WorkerId",
+                name: "IX_Penalties_WorkerId_ToolId",
                 table: "Penalties",
-                columns: new[] { "ToolId", "WorkerId" });
+                columns: new[] { "WorkerId", "ToolId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rentals_ToolId",

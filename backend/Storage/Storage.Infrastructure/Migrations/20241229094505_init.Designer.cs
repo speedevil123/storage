@@ -12,7 +12,7 @@ using Storage.DataAccess;
 namespace Storage.Infrastructure.Migrations
 {
     [DbContext(typeof(StorageDbContext))]
-    [Migration("20241227155456_init")]
+    [Migration("20241229094505_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -145,7 +145,7 @@ namespace Storage.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ToolId", "WorkerId");
+                    b.HasIndex("WorkerId", "ToolId");
 
                     b.ToTable("Penalties");
                 });
@@ -256,7 +256,7 @@ namespace Storage.Infrastructure.Migrations
                 {
                     b.HasOne("Storage.Infrastructure.Entities.RentalEntity", "Rental")
                         .WithMany("Penalties")
-                        .HasForeignKey("ToolId", "WorkerId")
+                        .HasForeignKey("WorkerId", "ToolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

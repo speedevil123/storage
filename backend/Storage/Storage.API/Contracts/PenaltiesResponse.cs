@@ -8,5 +8,5 @@
         Guid WorkerId,
         Guid ToolId,
         string WorkerName,
-        string Toolname);
+        string ToolName);
 }

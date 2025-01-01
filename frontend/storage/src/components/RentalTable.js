@@ -15,8 +15,7 @@ message.config({
 const RentalTable = () => {
     //penalty logic
     const [isPenaltyModalVisible, setPenaltyModalVisible] = useState(false);
-    const [penaltyDetails, setPenaltyDetails] = useState([]);
-    const [selectedRecord, setSelectedRecord] = useState(null);
+    const [penaltyDetails, setPenaltyDetails] = useState(null);
 
     const [workers, setWorkers] = useState([]);
     const [tools, setTools] = useState([]);
@@ -30,15 +29,15 @@ const RentalTable = () => {
     const [searchText, setSearchText] = useState(''); // Для поиска
 
     const handleViewPenaltyDetails = (record) => {
-        setSelectedRecord(record);
         const rentalId = `${record.workerId}/${record.toolId}`;
         getPenaltyById(rentalId); // Загрузка данных о просрочке
     };
 
-    const getPenaltyById = async (rentalId) => {
+    const getPenaltyById = async (penaltyId) => {
         try
         {
-            const penaltyData = await GETRequest(`/Penalties/${rentalId}`);
+            const penaltyData = await GETRequest(`/Penalties/${penaltyId}`);
+            console.log(penaltyData);
             setPenaltyDetails(penaltyData);
             setPenaltyModalVisible(true);
         }
@@ -55,6 +54,30 @@ const RentalTable = () => {
                 value.toString().toLowerCase().includes(searchText.toLowerCase())
         )
     );
+
+    const handlePenaltyPaid = async () => {
+
+         const penaltyToUpdate = {
+            id: penaltyDetails.id,
+            fine: penaltyDetails.fine,
+            penaltyDate: penaltyDetails.penaltyDate,
+            isPaidOut: true,
+            toolId: penaltyDetails.toolId,
+            workerId: penaltyDetails.workerId
+        }
+        
+        const penaltyId = await PUTRequest(`/Penalties/${penaltyDetails.id}`, penaltyToUpdate);
+
+        if (penaltyId) 
+        {
+            setPenaltyModalVisible(false);
+            message.success('Просрочка погашена.');
+        } 
+        else 
+        {
+            message.error('Ошибка погашения просрочки.');
+        }
+    };
 
     const validateRow = (record) => {   
         console.log(dataSource);
@@ -79,7 +102,8 @@ const RentalTable = () => {
             errors.push('Количество инструментов превышает доступное на складе.');
         }
         if(dataSource.some((item) => item.workerId === record.workerId
-            && item.toolId === record.toolId && item.key !== record.key))
+            && item.toolId === record.toolId && item.key !== record.key
+            && item.status === "Активен"))
         {
             errors.push('Данная запись уже существует, переоформите аренду или дождитесь истечения текущей');
         }
@@ -580,6 +604,7 @@ const RentalTable = () => {
                 visible={isPenaltyModalVisible}
                 onClose={() => setPenaltyModalVisible(false)}
                 penaltyDetails={penaltyDetails}
+                onPenaltyPaid={handlePenaltyPaid}
             />
         </div>
     );
