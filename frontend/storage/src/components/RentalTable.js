@@ -65,12 +65,31 @@ const RentalTable = () => {
             toolId: penaltyDetails.toolId,
             workerId: penaltyDetails.workerId
         }
+
+        const rentalRecord = dataSource.find((item) => item.workerId === penaltyToUpdate.workerId 
+            && item.toolId === penaltyToUpdate.toolId);
+
+        const rentalToUpdate = {
+            startDate: rentalRecord.startDate,
+            returnDate: rentalRecord.returnDate,
+            endDate: rentalRecord.endDate,
+            status: 'Погашено',
+            toolQuantity: rentalRecord.toolQuantity,
+            toolId: rentalRecord.toolId,
+            workerId: rentalRecord.workerId
+        }
         
+        const rentalId = await PUTRequest(`/Rentals/${rentalToUpdate.workerId}/${rentalToUpdate.toolId}`, rentalToUpdate)
         const penaltyId = await PUTRequest(`/Penalties/${penaltyDetails.id}`, penaltyToUpdate);
 
-        if (penaltyId) 
+        if (penaltyId && rentalId) 
         {
             setPenaltyModalVisible(false);
+            setDataSource((prevData) =>
+                prevData.map((item) =>
+                    item.key === rentalRecord.key ? {...item, ...rentalToUpdate, key: item.key} : item
+                )
+            );
             message.success('Просрочка погашена.');
         } 
         else 
@@ -492,6 +511,7 @@ const RentalTable = () => {
                 { text: 'Активен', value: 'Активен' },
                 { text: 'Завершено', value: 'Завершено' },
                 { text: 'Просрочено', value: 'Просрочено' },
+                { text: 'Погашено', value: 'Погашено' }
             ],
             onFilter: (value, record) => record.status === value,
             render: (text) => (
@@ -501,7 +521,7 @@ const RentalTable = () => {
                         backgroundColor:
                             text === 'Активен'
                                 ? '#d4edda' 
-                                : text === 'Завершено'
+                                : text === 'Завершено' || text === 'Погашено'
                                 ? '#f8d7da' 
                                 : text === 'Просрочено'
                                 ? '#FFE4B5'
@@ -537,7 +557,33 @@ const RentalTable = () => {
         {
             title: 'Действия',
             key: 'actions',
-            width: 120, 
+            width: 120,
+            filters: [
+                { text: 'Активировать', value: 'Активировать' },
+                { text: 'Завершить', value: 'Завершить' },
+                { text: 'Подробности', value: 'Подробности' },
+                { text: 'Удалить', value: 'Удалить' },
+                { text: 'Погашено', value: 'Погашено'}
+            ],
+            onFilter: (value, record) => {
+                const actions = [];
+        
+                if (record.status === 'Неопределен') {
+                    actions.push('Активировать');
+                }
+                if (record.status === 'Активен') {
+                    actions.push('Завершить');
+                }
+                if (record.status === 'Просрочено') {
+                    actions.push('Подробности');
+                }
+                if (record.status === 'Погашено') {
+                    actions.push('Подробности');
+                }
+                actions.push('Удалить');
+        
+                return actions.includes(value);
+            },
             render: (_, record) => (
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     {record.status === 'Неопределен' && (
@@ -545,16 +591,29 @@ const RentalTable = () => {
                             type="text"
                             icon={<CheckOutlined style={{ color: 'green', fontSize: '18px' }} />}
                             onClick={() => handleActivate(record.key)}
-                        />
+                        >
+                            Активировать
+                        </Button>
                     )}
                     {record.status === 'Активен' && (
                         <Button
                             type="text"
                             icon={<CheckCircleOutlined style={{ color: 'blue', fontSize: '18px' }} />}
                             onClick={() => handleComplete(record.key)}
-                        />
+                        >
+                            Завершить
+                        </Button>
                     )}
                     {record.status === 'Просрочено' && (
+                        <Button
+                            type="text"
+                            icon={<ExclamationCircleOutlined />}
+                            onClick={() => handleViewPenaltyDetails(record)}
+                        >
+                            Подробности
+                        </Button>
+                    )}
+                    {record.status === 'Погашено' && (
                         <Button
                             type="text"
                             icon={<ExclamationCircleOutlined />}
@@ -568,7 +627,9 @@ const RentalTable = () => {
                         danger
                         icon={<DeleteOutlined />}
                         onClick={() => showDeleteModal(record.key)}
-                    />
+                    >
+                        Удалить
+                    </Button>
                 </div>
             ),
         },

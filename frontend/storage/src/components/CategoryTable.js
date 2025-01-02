@@ -201,7 +201,7 @@ const CategoriesTable = () => {
         backgroundColor: '#f5f5f5',
         cursor: 'not-allowed',
         border: '1px solid #d9d9d9',
-        width: '200px' 
+        width: '300px' 
     };
 
     const columns = [

@@ -90,10 +90,7 @@ const WorkerTable = () => {
             errors.push('Пожалуйста заполните все поля');
         }
         if (filteredDataSource.some(worker => 
-            worker.name === record.name &&
-            worker.phoneNumber === record.phoneNumber &&
-            worker.email === record.email &&
-            worker.departmentName === record.departmentName &&
+            (worker.phoneNumber === record.phoneNumber || worker.email === record.email) &&
             worker.key !== record.key
             ))
         {
@@ -250,7 +247,7 @@ const WorkerTable = () => {
         backgroundColor: '#f5f5f5',
         cursor: 'not-allowed',
         border: '1px solid #d9d9d9',
-        width: '200px' 
+        width: '100%' 
     };
 
     const columns = [
@@ -384,7 +381,7 @@ const WorkerTable = () => {
                           updateField(record.key, 'departmentName', selectedDepartment.name);
                       }
                   }}
-                  style={{ width: '300px' }}
+                  style={{ width: '100%' }}
                   placeholder="Выберите отдел"
                 />
               ) : (
@@ -394,7 +391,6 @@ const WorkerTable = () => {
         {
             title: 'Действия',
             key: 'actions',
-            width: 150,
             render: (_, record) => (
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     {addingKey && addingKey === record.key ? (
