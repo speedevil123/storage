@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Storage.Core.Models
+﻿namespace Storage.Core.Models
 {
     public class Rental
     {
-        public Rental(Guid workerId, Guid toolId, 
+        public Rental(Guid id, Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, DateTime endDate, string status, Worker worker, Tool tool, int toolQuantity)
         {
+            Id = id;
             WorkerId = workerId;
             ToolId = toolId;
             StartDate = startDate;
@@ -21,20 +16,21 @@ namespace Storage.Core.Models
             Tool = tool;
             ToolQuantity = toolQuantity;
         }
+
+        public Guid Id { get; } // Новый первичный ключ
         public DateTime StartDate { get; } = new DateTime();
         public DateTime ReturnDate { get; } = new DateTime();
         public DateTime EndDate { get; } = new DateTime();
 
-        //Если просрочен то триггером поставить статус просрочен и сгенерировать строку с Penalty
         public string Status { get; } = string.Empty; // Статус (активен, завершен, просрочен)
         public int ToolQuantity { get; set; }
 
-        //Navigation + ForeignKey
+        // Navigation + ForeignKey
         public Guid WorkerId { get; }
         public Guid ToolId { get; }
 
-        public Worker? Worker { get; } 
-        public Tool? Tool { get; } 
+        public Worker? Worker { get; }
+        public Tool? Tool { get; }
 
         public List<Penalty> Penalties { get; } = new List<Penalty>();
     }

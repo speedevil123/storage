@@ -30,9 +30,9 @@ namespace Storage.Application.Services
             return await _penaltiesRepository.Get();
         }
 
-        public async Task<Penalty> GetPenaltyById(Guid workerId, Guid toolId)
+        public async Task<Penalty> GetPenaltyById(Guid id)
         {
-            return await _penaltiesRepository.GetPenaltyById(workerId, toolId);
+            return await _penaltiesRepository.GetPenaltyById(id);
         }
 
         public async Task<Guid> UpdatePenalty(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid toolId, Guid workerId)

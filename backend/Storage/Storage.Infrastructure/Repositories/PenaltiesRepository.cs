@@ -21,7 +21,7 @@ namespace Storage.Infrastructure.Repositories
         }
 
 
-        public async Task<Penalty> GetPenaltyById(Guid workerId, Guid toolId)
+        public async Task<Penalty> GetPenaltyById(Guid id)
         {
             var penalty = await _context.Penalties
                 .Include(p => p.Rental)
@@ -30,11 +30,11 @@ namespace Storage.Infrastructure.Repositories
                     .ThenInclude(r => r.Tool)
                         .ThenInclude(t => t.Model)
                             .ThenInclude(m => m.Category)
-                .FirstOrDefaultAsync(p => p.ToolId == toolId && p.WorkerId == workerId);
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if(penalty == null)
             {
-                throw new KeyNotFoundException($"PenaltyEntity with workerId {penalty.WorkerId} | toolId {penalty.ToolId} not found");
+                throw new KeyNotFoundException($"PenaltyEntity with id {id} not found");
             }
 
             return (MapToDomain(penalty));
@@ -50,11 +50,11 @@ namespace Storage.Infrastructure.Repositories
                 .Include(r => r.Tool)
                     .ThenInclude(t => t.Model)
                         .ThenInclude(m => m.Category)
-                .FirstOrDefaultAsync(r => r.ToolId == penalty.ToolId && r.WorkerId == penalty.WorkerId);
+                .FirstOrDefaultAsync(r => r.Id == penalty.Id);
 
             if (rental == null)
             {
-                throw new KeyNotFoundException($"RentalEntity with workerId {penalty.WorkerId} | toolId {penalty.ToolId} not found");
+                throw new KeyNotFoundException($"RentalEntity with id {penalty.Id} already exsists");
             }
 
             var penaltyEntity = new PenaltyEntity
@@ -131,7 +131,7 @@ namespace Storage.Infrastructure.Repositories
             }
             if (penaltyToUpdate == null)
             {
-                throw new KeyNotFoundException($"PenaltyEntity with workerId {workerId} | toolId {toolId} not found");
+                throw new KeyNotFoundException($"PenaltyEntity with id {id} not found");
             }
 
             penaltyToUpdate.PenaltyDate = penaltyDate;

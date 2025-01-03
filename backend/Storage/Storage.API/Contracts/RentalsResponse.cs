@@ -1,6 +1,7 @@
 ﻿namespace Storage.API.Contracts
 {
     public record RentalsResponse(
+        Guid id,
         Guid workerId,
         Guid toolId,
         string workerName,

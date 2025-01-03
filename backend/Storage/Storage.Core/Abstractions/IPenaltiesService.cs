@@ -9,7 +9,7 @@ namespace Storage.Core.Abstractions
 {
     public interface IPenaltiesService
     {
-        Task<Penalty> GetPenaltyById(Guid workerId, Guid toolId);
+        Task<Penalty> GetPenaltyById(Guid id);
         Task<Guid> CreatePenalty(Penalty penalty);
         Task<Guid> DeletePenalty(Guid id);
         Task<List<Penalty>> GetAllPenalties();

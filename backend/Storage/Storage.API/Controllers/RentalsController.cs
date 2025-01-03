@@ -26,6 +26,7 @@ namespace Storage.API.Controllers
                 .GetAllRentals();
 
             var response = rentals.Select(r => new RentalsResponse(
+                    r.Id,
                     r.WorkerId,
                     r.ToolId,
                     r.Worker.Name,
@@ -43,6 +44,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult> CreateRental([FromBody] RentalsRequest request)
         {
             var rental = new Rental(
+                request.id,
                 request.workerId, 
                 request.toolId,
                 Convert.ToDateTime(request.startDate), 
@@ -57,8 +59,8 @@ namespace Storage.API.Controllers
             return Ok(rentalToolId);
         }
 
-        [HttpPut("{workerId:guid}/{toolId:guid}")]
-        public async Task<ActionResult<Guid>> UpdateRental(Guid workerId, Guid toolId, [FromBody] RentalsRequest request)
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult<Guid>> UpdateRental(Guid id, [FromBody] RentalsRequest request)
         {
             if(request.status == "Просрочено")
             {
@@ -68,16 +70,17 @@ namespace Storage.API.Controllers
                      Math.Round(daysDelay * 50.0,4),
                      DateTime.Now,
                      false,
-                     toolId,
-                     workerId,
+                     request.toolId,
+                     request.workerId,
                      null);
 
                 var penaltyToolId = await _penaltiesService.CreatePenalty(penalty);
             }
             var rentalToolId = await _rentalsService
                 .UpdateRental(
-                workerId, 
-                toolId, 
+                id,
+                request.workerId, 
+                request.toolId, 
                 Convert.ToDateTime(request.startDate), 
                 Convert.ToDateTime(request.returnDate),
                 Convert.ToDateTime(request.endDate), 
@@ -87,10 +90,10 @@ namespace Storage.API.Controllers
             return Ok(rentalToolId);
         }
 
-        [HttpDelete("{workerId:guid}/{toolId:guid}")]
-        public async Task<ActionResult<Guid>> DeleteRental(Guid workerId, Guid toolId)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Guid>> DeleteRental(Guid id)
         {
-            var rentalToolId = await _rentalsService.DeleteRental(workerId, toolId);
+            var rentalToolId = await _rentalsService.DeleteRental(id);
             return Ok(rentalToolId);
         }
     }

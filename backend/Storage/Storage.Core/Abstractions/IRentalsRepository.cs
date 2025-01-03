@@ -10,9 +10,9 @@ namespace Storage.Core.Abstractions
     public interface IRentalsRepository
     {
         Task<Guid> Create(Rental rental);
-        Task<Guid> Delete(Guid workerId, Guid toolId);
+        Task<Guid> Delete(Guid id);
         Task<List<Rental>> Get();
-        Task<Guid> Update(Guid workerId, Guid toolId,
+        Task<Guid> Update(Guid id, Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, DateTime endDate, string status, int toolQuantity);
     }
 }

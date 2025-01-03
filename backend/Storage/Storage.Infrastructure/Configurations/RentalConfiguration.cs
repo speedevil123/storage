@@ -1,12 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿// Configuration
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Storage.Core.Models;
 using Storage.Infrastructure.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Storage.Infrastructure.Configurations
 {
@@ -14,13 +9,16 @@ namespace Storage.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<RentalEntity> builder)
         {
-            builder.HasKey(r => new { r.WorkerId, r.ToolId }); 
+            builder.HasKey(r => r.Id); // Новый первичный ключ
+
+            builder.Property(r => r.Id)
+                .IsRequired();
 
             builder.Property(r => r.StartDate)
                 .IsRequired();
 
             builder.Property(r => r.ReturnDate)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(r => r.EndDate)
                 .IsRequired();
@@ -39,6 +37,9 @@ namespace Storage.Infrastructure.Configurations
             builder.HasOne(r => r.Tool)
                 .WithMany(t => t.Rentals)
                 .HasForeignKey(r => r.ToolId);
+
+            builder.HasIndex(r => new { r.WorkerId, r.ToolId }) // Индекс для составного ключа
+                .IsUnique(false);
         }
     }
 }

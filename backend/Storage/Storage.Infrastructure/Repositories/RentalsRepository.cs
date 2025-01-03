@@ -39,6 +39,7 @@ namespace Storage.Infrastructure.Repositories
 
             var rentalEntity = new RentalEntity
             {
+                Id = rental.Id,
                 WorkerId = rental.WorkerId,
                 ToolId = rental.ToolId,
                 StartDate = rental.StartDate,
@@ -59,10 +60,10 @@ namespace Storage.Infrastructure.Repositories
         }
 
 
-        public async Task<Guid> Delete(Guid workerId, Guid toolId)
+        public async Task<Guid> Delete(Guid id)
         {
             var rentalExists = await _context.Rentals
-               .AnyAsync(r => r.WorkerId == workerId && r.ToolId == toolId);
+               .AnyAsync(r => r.Id == id);
 
             if (!rentalExists)
             {
@@ -70,10 +71,10 @@ namespace Storage.Infrastructure.Repositories
             }
 
             await _context.Rentals
-                .Where(r => r.WorkerId == workerId && r.ToolId == toolId)
+                .Where(r => r.Id == id)
                 .ExecuteDeleteAsync();
 
-            return toolId;
+            return id;
         }
 
         public async Task<List<Rental>> Get()
@@ -95,13 +96,13 @@ namespace Storage.Infrastructure.Repositories
             return rentals;
         }
 
-        public async Task<Guid> Update(Guid workerId, Guid toolId,
+        public async Task<Guid> Update(Guid id, Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, DateTime endDate, string status, int toolQuantity)
         {
             var worker = await _context.Workers.FirstOrDefaultAsync(w => w.Id == workerId);
             var tool = await _context.Tools.FirstOrDefaultAsync(t => t.Id == toolId);
             var rentalToUpdate = await _context.Rentals
-                .FirstOrDefaultAsync(r => r.WorkerId == workerId && r.ToolId == toolId);
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (worker == null)
             {
@@ -113,9 +114,9 @@ namespace Storage.Infrastructure.Repositories
                 throw new KeyNotFoundException($"ToolEntity with id {toolId} not found");
             }
 
-            if (rentalToUpdate == null)
+            if (rentalToUpdate != null)
             {
-                throw new KeyNotFoundException($"RentalEntity with id {toolId} not found");
+                throw new KeyNotFoundException($"RentalEntity with id {id} already exists");
             }
 
             rentalToUpdate.WorkerId = workerId;
@@ -142,6 +143,7 @@ namespace Storage.Infrastructure.Repositories
             Tool tool = ToolsRepository.MapToDomain(entity.Tool);
 
             return new Rental(
+                entity.Id,
                 entity.WorkerId,
                 entity.ToolId,
                 entity.StartDate,

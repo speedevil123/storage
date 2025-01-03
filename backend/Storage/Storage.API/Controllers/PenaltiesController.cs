@@ -36,10 +36,10 @@ namespace Storage.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{workerId:guid}/{toolId:guid}")]
-        public async Task<ActionResult<PenaltiesResponse>> GetPenaltyById(Guid workerId, Guid toolId)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<PenaltiesResponse>> GetPenaltyById(Guid id)
         {
-            var penalty = await _penaltiesService.GetPenaltyById(workerId, toolId);
+            var penalty = await _penaltiesService.GetPenaltyById(id);
 
             var response = new PenaltiesResponse(
                 penalty.Id,

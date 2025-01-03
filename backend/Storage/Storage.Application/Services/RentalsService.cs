@@ -22,9 +22,9 @@ namespace Storage.Application.Services
             return await _RentalsRepository.Create(rental);
         }
 
-        public async Task<Guid> DeleteRental(Guid workerId, Guid toolId)
+        public async Task<Guid> DeleteRental(Guid id)
         {
-            return await _RentalsRepository.Delete(workerId, toolId);
+            return await _RentalsRepository.Delete(id);
         }
 
         public async Task<List<Rental>> GetAllRentals()
@@ -32,10 +32,10 @@ namespace Storage.Application.Services
             return await _RentalsRepository.Get();
         }
 
-        public async Task<Guid> UpdateRental(Guid workerId, Guid toolId,
+        public async Task<Guid> UpdateRental(Guid id, Guid workerId, Guid toolId,
             DateTime startDate, DateTime returnDate, DateTime endDate, string status, int toolQuantity)
         {
-            return await _RentalsRepository.Update(workerId, toolId, startDate, returnDate, endDate, status, toolQuantity);
+            return await _RentalsRepository.Update(id, workerId, toolId, startDate, returnDate, endDate, status, toolQuantity);
         }
     }
 }
