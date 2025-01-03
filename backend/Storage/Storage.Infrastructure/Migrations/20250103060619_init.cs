@@ -126,17 +126,18 @@ namespace Storage.Infrastructure.Migrations
                 name: "Rentals",
                 columns: table => new
                 {
-                    WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ToolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    ToolQuantity = table.Column<int>(type: "int", nullable: false)
+                    ToolQuantity = table.Column<int>(type: "int", nullable: false),
+                    WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ToolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rentals", x => new { x.WorkerId, x.ToolId });
+                    table.PrimaryKey("PK_Rentals", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Rentals_Tools_ToolId",
                         column: x => x.ToolId,
@@ -159,17 +160,16 @@ namespace Storage.Infrastructure.Migrations
                     Fine = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
                     PenaltyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPaidOut = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    ToolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    WorkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    RentalId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Penalties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Penalties_Rentals_WorkerId_ToolId",
-                        columns: x => new { x.WorkerId, x.ToolId },
+                        name: "FK_Penalties_Rentals_RentalId",
+                        column: x => x.RentalId,
                         principalTable: "Rentals",
-                        principalColumns: new[] { "WorkerId", "ToolId" },
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -179,14 +179,19 @@ namespace Storage.Infrastructure.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Penalties_WorkerId_ToolId",
+                name: "IX_Penalties_RentalId",
                 table: "Penalties",
-                columns: new[] { "WorkerId", "ToolId" });
+                column: "RentalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rentals_ToolId",
                 table: "Rentals",
                 column: "ToolId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rentals_WorkerId_ToolId",
+                table: "Rentals",
+                columns: new[] { "WorkerId", "ToolId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tools_ManufacturerId",

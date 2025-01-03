@@ -32,7 +32,8 @@ namespace Storage.Infrastructure.Configurations
 
             builder.HasOne(w => w.Department)
                 .WithMany(d => d.Workers)
-                .HasForeignKey(w => w.DepartmentId);
+                .HasForeignKey(w => w.DepartmentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

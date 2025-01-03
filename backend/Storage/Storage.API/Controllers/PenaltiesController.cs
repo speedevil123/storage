@@ -28,8 +28,7 @@ namespace Storage.API.Controllers
                 p.Fine,
                 p.PenaltyDate,
                 p.IsPaidOut,
-                p.Rental.WorkerId,
-                p.Rental.ToolId,
+                p.Rental.Id,
                 p.Rental.Worker.Name,
                 p.Rental.Tool.Model.Category.Name + " " + p.Rental.Tool.Model.Name));
 
@@ -46,8 +45,7 @@ namespace Storage.API.Controllers
                 penalty.Fine,
                 penalty.PenaltyDate,
                 penalty.IsPaidOut,
-                penalty.Rental.WorkerId,
-                penalty.Rental.ToolId,
+                penalty.Rental.Id,
                 penalty.Rental.Worker.Name,
                 $"{penalty.Rental.Tool.Model.Category.Name} {penalty.Rental.Tool.Model.Name}"
             );
@@ -59,7 +57,7 @@ namespace Storage.API.Controllers
         public async Task<ActionResult<Guid>> UpdatePenalty(Guid id, [FromBody] PenaltiesRequest request)
         {
             var penaltyId = await _penaltiesService
-                .UpdatePenalty(id, request.Fine, request.PenaltyDate, request.IsPaidOut, request.ToolId, request.WorkerId);
+                .UpdatePenalty(id, request.Fine, request.PenaltyDate, request.IsPaidOut, request.RentalId);
             return Ok(penaltyId);
         }
 

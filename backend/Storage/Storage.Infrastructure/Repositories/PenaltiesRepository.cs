@@ -30,7 +30,7 @@ namespace Storage.Infrastructure.Repositories
                     .ThenInclude(r => r.Tool)
                         .ThenInclude(t => t.Model)
                             .ThenInclude(m => m.Category)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.RentalId == id);
 
             if(penalty == null)
             {
@@ -52,7 +52,7 @@ namespace Storage.Infrastructure.Repositories
                         .ThenInclude(m => m.Category)
                 .FirstOrDefaultAsync(r => r.Id == penalty.Id);
 
-            if (rental == null)
+            if (rental != null)
             {
                 throw new KeyNotFoundException($"RentalEntity with id {penalty.Id} already exsists");
             }
@@ -64,15 +64,14 @@ namespace Storage.Infrastructure.Repositories
                 PenaltyDate = penalty.PenaltyDate,
                 IsPaidOut = penalty.IsPaidOut,
 
-                ToolId = penalty.ToolId,
-                WorkerId = penalty.WorkerId,
+                RentalId = penalty.RentalId,
                 Rental = rental
             };
 
             await _context.Penalties.AddAsync(penaltyEntity);
             await _context.SaveChangesAsync();
 
-            return penaltyEntity.ToolId;
+            return penaltyEntity.Id;
         }
 
         public async Task<Guid> Delete(Guid id)
@@ -111,7 +110,7 @@ namespace Storage.Infrastructure.Repositories
             return penaltyEntities.Select(MapToDomain).ToList();    
         }
 
-        public async Task<Guid> Update(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid toolId, Guid workerId)
+        public async Task<Guid> Update(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid rentalId)
         {
             var rental = await _context.Rentals
                 .Include(r => r.Worker)
@@ -121,13 +120,13 @@ namespace Storage.Infrastructure.Repositories
                 .Include(r => r.Tool)
                     .ThenInclude(t => t.Model)
                         .ThenInclude(m => m.Category)
-                .FirstOrDefaultAsync(r => r.ToolId == toolId && r.WorkerId == workerId);
+                .FirstOrDefaultAsync(r => r.Id == rentalId);
 
             var penaltyToUpdate = await _context.Penalties.FirstOrDefaultAsync(p => p.Id == id);
 
             if (rental == null)
             {
-                throw new KeyNotFoundException($"RentalEntity with workerId {workerId} | toolId {toolId} not found");
+                throw new KeyNotFoundException($"RentalEntity with id {rentalId} not found");
             }
             if (penaltyToUpdate == null)
             {
@@ -137,11 +136,10 @@ namespace Storage.Infrastructure.Repositories
             penaltyToUpdate.PenaltyDate = penaltyDate;
             penaltyToUpdate.IsPaidOut = isPaidOut;
             penaltyToUpdate.Fine = fine;
-            penaltyToUpdate.ToolId = toolId;
-            penaltyToUpdate.WorkerId = workerId;
+            penaltyToUpdate.RentalId = rentalId;
 
             await _context.SaveChangesAsync();
-            return toolId;
+            return id;
         }
 
         public static Penalty MapToDomain(PenaltyEntity entity)
@@ -158,8 +156,7 @@ namespace Storage.Infrastructure.Repositories
                 entity.Fine,
                 entity.PenaltyDate,
                 entity.IsPaidOut,
-                entity.ToolId,
-                entity.WorkerId,
+                entity.RentalId,
                 rental);
         }
     }

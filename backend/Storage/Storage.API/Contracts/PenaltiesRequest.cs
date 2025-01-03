@@ -7,6 +7,5 @@ namespace Storage.API.Contracts
         double Fine,
         DateTime PenaltyDate,
         bool IsPaidOut,
-        Guid WorkerId,
-        Guid ToolId);
+        Guid RentalId);
 }

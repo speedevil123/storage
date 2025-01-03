@@ -13,8 +13,7 @@ namespace Storage.Infrastructure.Entities
         public DateTime PenaltyDate { get; set; }
         public bool IsPaidOut {  get; set; }
 
-        public Guid ToolId { get; set; }
-        public Guid WorkerId { get; set; }
+        public Guid RentalId { get; set; }
 
         //Navigation 
         public RentalEntity? Rental { get; set; }

@@ -5,8 +5,7 @@
         double Fine,
         DateTime PenaltyDate,
         bool IsPaidOut,
-        Guid WorkerId,
-        Guid ToolId,
+        Guid RentalId,
         string WorkerName,
         string ToolName);
 }

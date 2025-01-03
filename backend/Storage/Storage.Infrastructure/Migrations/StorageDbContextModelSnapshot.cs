@@ -134,25 +134,20 @@ namespace Storage.Infrastructure.Migrations
                     b.Property<DateTime>("PenaltyDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ToolId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("WorkerId")
+                    b.Property<Guid>("RentalId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkerId", "ToolId");
+                    b.HasIndex("RentalId");
 
                     b.ToTable("Penalties");
                 });
 
             modelBuilder.Entity("Storage.Infrastructure.Entities.RentalEntity", b =>
                 {
-                    b.Property<Guid>("WorkerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ToolId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("EndDate")
@@ -169,12 +164,20 @@ namespace Storage.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<Guid>("ToolId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("ToolQuantity")
                         .HasColumnType("int");
 
-                    b.HasKey("WorkerId", "ToolId");
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ToolId");
+
+                    b.HasIndex("WorkerId", "ToolId");
 
                     b.ToTable("Rentals");
                 });
@@ -253,7 +256,7 @@ namespace Storage.Infrastructure.Migrations
                 {
                     b.HasOne("Storage.Infrastructure.Entities.RentalEntity", "Rental")
                         .WithMany("Penalties")
-                        .HasForeignKey("WorkerId", "ToolId")
+                        .HasForeignKey("RentalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

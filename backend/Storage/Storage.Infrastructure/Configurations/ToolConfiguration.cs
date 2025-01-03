@@ -24,12 +24,14 @@ namespace Storage.DataAccess.Configurations
 
             builder.HasOne(t => t.Manufacturer)
                 .WithMany(m => m.Tools)
-                .HasForeignKey(t => t.ManufacturerId);
+                .HasForeignKey(t => t.ManufacturerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(t => t.Model)
                 .WithMany(m => m.Tools)
-                .HasForeignKey(m => m.ModelId);
-        
+                .HasForeignKey(m => m.ModelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 

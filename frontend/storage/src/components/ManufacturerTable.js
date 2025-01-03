@@ -16,7 +16,7 @@ const ManufacturerTable = () => {
     const [selectedRowKey, setSelectedRowKey] = useState(false);
     const [pagination, setPagination] = useState({
         current: 1,
-        pageSize: 10,
+        pageSize: 8,
     });
     const [editingKey, setEditingKey] = useState(false);
     const [addingKey, setAddingKey] = useState(false);

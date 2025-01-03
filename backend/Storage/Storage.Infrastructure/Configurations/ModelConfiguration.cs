@@ -20,7 +20,8 @@ namespace Storage.Infrastructure.Configurations
 
             builder.HasOne(m => m.Category)
                 .WithMany(c => c.Models)
-                .HasForeignKey(m => m.CategoryId);
+                .HasForeignKey(m => m.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

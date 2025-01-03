@@ -114,9 +114,9 @@ namespace Storage.Infrastructure.Repositories
                 throw new KeyNotFoundException($"ToolEntity with id {toolId} not found");
             }
 
-            if (rentalToUpdate != null)
+            if (rentalToUpdate == null)
             {
-                throw new KeyNotFoundException($"RentalEntity with id {id} already exists");
+                throw new KeyNotFoundException($"RentalEntity with id {id} not found");
             }
 
             rentalToUpdate.WorkerId = workerId;

@@ -6,6 +6,7 @@ import { CheckOutlined, CheckCircleOutlined, DeleteOutlined, SearchOutlined, Exc
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { message } from 'antd';
 import PenaltyDetailsModal from './PenaltyDetailModal';
+import { generateGUID } from '../guidGenerator';
 
 message.config({
     duration: 3, 
@@ -29,7 +30,7 @@ const RentalTable = () => {
     const [searchText, setSearchText] = useState(''); // Для поиска
 
     const handleViewPenaltyDetails = (record) => {
-        const rentalId = `${record.workerId}/${record.toolId}`;
+        const rentalId = `${record.id}`;
         getPenaltyById(rentalId); // Загрузка данных о просрочке
     };
 
@@ -37,7 +38,6 @@ const RentalTable = () => {
         try
         {
             const penaltyData = await GETRequest(`/Penalties/${penaltyId}`);
-            console.log(penaltyData);
             setPenaltyDetails(penaltyData);
             setPenaltyModalVisible(true);
         }
@@ -55,6 +55,7 @@ const RentalTable = () => {
         )
     );
 
+    //
     const handlePenaltyPaid = async () => {
 
          const penaltyToUpdate = {
@@ -62,24 +63,23 @@ const RentalTable = () => {
             fine: penaltyDetails.fine,
             penaltyDate: penaltyDetails.penaltyDate,
             isPaidOut: true,
-            toolId: penaltyDetails.toolId,
-            workerId: penaltyDetails.workerId
+            rentalId: penaltyDetails.rentalId
         }
 
-        const rentalRecord = dataSource.find((item) => item.workerId === penaltyToUpdate.workerId 
-            && item.toolId === penaltyToUpdate.toolId);
+        const rentalRecord = dataSource.find((item) => item.id === penaltyDetails.rentalId);
 
         const rentalToUpdate = {
+            id: rentalRecord.id,
             startDate: rentalRecord.startDate,
             returnDate: rentalRecord.returnDate,
             endDate: rentalRecord.endDate,
             status: 'Погашено',
             toolQuantity: rentalRecord.toolQuantity,
-            toolId: rentalRecord.toolId,
-            workerId: rentalRecord.workerId
+            workerId: rentalRecord.workerId,
+            toolId: rentalRecord.toolId
         }
         
-        const rentalId = await PUTRequest(`/Rentals/${rentalToUpdate.workerId}/${rentalToUpdate.toolId}`, rentalToUpdate)
+        const rentalId = await PUTRequest(`/Rentals/${rentalToUpdate.id}`, rentalToUpdate)
         const penaltyId = await PUTRequest(`/Penalties/${penaltyDetails.id}`, penaltyToUpdate);
 
         if (penaltyId && rentalId) 
@@ -152,6 +152,8 @@ const RentalTable = () => {
         }
 
         const newRental = {
+            id: record.key,
+            rentalId: record.id,
             workerId: record.workerId,
             toolId: record.toolId,
             startDate: record.startDate,
@@ -187,6 +189,9 @@ const RentalTable = () => {
         const isOverdue = compareFormattedDates(today, record.endDate);
         
         const rentalToUpdate = {
+            id: record.id,
+            workerId: record.workerId,
+            toolId: record.toolId,
             startDate: record.startDate,
             returnDate: today,
             endDate: record.endDate,
@@ -194,7 +199,7 @@ const RentalTable = () => {
             toolQuantity: record.toolQuantity
         }
 
-        const rentalId = PUTRequest(`/Rentals/${record.workerId}/${record.toolId}`, rentalToUpdate);
+        const rentalId = PUTRequest(`/Rentals/${rentalToUpdate.id}`, rentalToUpdate);
 
         if(rentalId)
         {
@@ -230,7 +235,7 @@ const RentalTable = () => {
             return;
         }
 
-        const rentalId = DELETERequest(`/Rentals/${record.workerId}/${record.toolId}`);
+        const rentalId = DELETERequest(`/Rentals/${record.id}`);
         if(rentalId)
         {
             setDataSource((prevData) => prevData.filter((item) => item.key !== key));
@@ -282,7 +287,8 @@ const RentalTable = () => {
         try {
             const rentalsData = await GETRequest('/Rentals');
             const rentalRows = rentalsData.map((rental) => ({
-                key: `${rental.workerId} ${rental.toolId}`,
+                key: rental.id,
+                id: rental.id,
                 workerName: rental.workerName,
                 workerId: rental.workerId,
                 toolName: rental.toolName,
@@ -323,7 +329,7 @@ const RentalTable = () => {
         }
 
         const newRow = {
-            key: `new-${dataSource.length + 1}`,
+            key: generateGUID(),
             workerName: '',
             workerId: null,
             toolName: '',

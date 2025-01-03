@@ -13,6 +13,6 @@ namespace Storage.Core.Abstractions
         Task<Guid> Create(Penalty penalty);
         Task<Guid> Delete(Guid id);
         Task<List<Penalty>> Get();
-        Task<Guid> Update(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid toolId, Guid workerId);
+        Task<Guid> Update(Guid id, double fine, DateTime penaltyDate,bool isPaidOut, Guid rentalId);
     }
 }

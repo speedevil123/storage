@@ -32,11 +32,13 @@ namespace Storage.Infrastructure.Configurations
 
             builder.HasOne(r => r.Worker)
                 .WithMany(w => w.Rentals)
-                .HasForeignKey(r => r.WorkerId);
+                .HasForeignKey(r => r.WorkerId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(r => r.Tool)
                 .WithMany(t => t.Rentals)
-                .HasForeignKey(r => r.ToolId);
+                .HasForeignKey(r => r.ToolId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasIndex(r => new { r.WorkerId, r.ToolId }) // Индекс для составного ключа
                 .IsUnique(false);

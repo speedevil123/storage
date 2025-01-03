@@ -62,16 +62,16 @@ namespace Storage.API.Controllers
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<Guid>> UpdateRental(Guid id, [FromBody] RentalsRequest request)
         {
+
             if(request.status == "Просрочено")
             {
                 var daysDelay = (Convert.ToDateTime(request.returnDate) - Convert.ToDateTime(request.endDate)).TotalDays;
                 var penalty = new Penalty(
-                    Guid.NewGuid(),
+                     Guid.NewGuid(),
                      Math.Round(daysDelay * 50.0,4),
                      DateTime.Now,
                      false,
-                     request.toolId,
-                     request.workerId,
+                     request.id,
                      null);
 
                 var penaltyToolId = await _penaltiesService.CreatePenalty(penalty);
@@ -87,7 +87,7 @@ namespace Storage.API.Controllers
                 request.status, 
                 request.toolQuantity);
 
-            return Ok(rentalToolId);
+                return Ok(rentalToolId);
         }
 
         [HttpDelete("{id:guid}")]
